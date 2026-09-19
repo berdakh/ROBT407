@@ -61,8 +61,8 @@ def build() -> str:
     steps = [
         ("+46,986%", "no shift, no costs", "the Day 1 result", "bad"),
         ("+406%", "indexing corrected", "look-ahead removed", "warn"),
-        ("−70.7%", "+ 24 bps round trip", "costs added", "bad"),
-        ("+582%", "buy & hold", "doing nothing beat it", "good"),
+        ("+16%", "+ 24 bps round trip", "costs added", "warn"),
+        ("+582%", "buy & hold", "doing nothing won", "good"),
     ]
     cw2 = (W - 92 - 3 * 16) / 4
     for j, (value, how, note, color) in enumerate(steps):
