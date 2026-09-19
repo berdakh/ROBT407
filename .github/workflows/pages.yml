@@ -20,6 +20,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
+        with:
+          # Turn Pages on via the API if it is not already enabled, rather than
+          # requiring someone to find Settings -> Pages first. Without this the
+          # very first deploy fails with "Get Pages site failed ... Not Found",
+          # which reads like a bug in the workflow rather than a missing
+          # setting. Needs the `pages: write` permission declared above.
+          enablement: true
       - uses: actions/jekyll-build-pages@v1
         with:
           source: ./docs
