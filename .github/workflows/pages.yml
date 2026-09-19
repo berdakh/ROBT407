@@ -19,14 +19,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      # NOTE: Pages must be switched on ONCE by a repository admin:
+      #   Settings -> Pages -> Source: "GitHub Actions"
+      #
+      # This cannot be automated from here. `enablement: true` on this step
+      # calls the "create a Pages site" API, which needs admin permission; the
+      # workflow's GITHUB_TOKEN cannot be granted it (`pages: write` covers
+      # deploying to an EXISTING site, not creating one), and it fails with
+      # "Resource not accessible by integration". The sister ROBT613 repo hit
+      # exactly this and documents it in its own pages.yml.
       - uses: actions/configure-pages@v5
-        with:
-          # Turn Pages on via the API if it is not already enabled, rather than
-          # requiring someone to find Settings -> Pages first. Without this the
-          # very first deploy fails with "Get Pages site failed ... Not Found",
-          # which reads like a bug in the workflow rather than a missing
-          # setting. Needs the `pages: write` permission declared above.
-          enablement: true
+
       - uses: actions/jekyll-build-pages@v1
         with:
           source: ./docs

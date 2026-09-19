@@ -154,20 +154,28 @@ dark PNGs, because most rasterisers do not implement `var()`.
 ## How the site is published
 
 `.github/workflows/pages.yml` builds `docs/` with Jekyll and deploys it on every
-push to `master`. The workflow passes `enablement: true` to
-`actions/configure-pages`, so it switches Pages on by itself the first time it
-runs.
+push to `master`.
 
-If a deploy ever fails at the `configure-pages` step with
+**Pages has to be switched on once, by hand**, at
+**Settings → Pages → Source: GitHub Actions**. The workflow cannot do it for
+you: enabling Pages calls a "create a Pages site" API that needs admin rights,
+and the workflow's token only has `pages: write`, which covers deploying to an
+existing site. Trying it anyway fails with *"Resource not accessible by
+integration"*.
+
+If a deploy fails at the `configure-pages` step with
 
 ```
 Get Pages site failed. Please verify that the repository has Pages enabled
 and configured to build using GitHub Actions ... Error: Not Found
 ```
 
-then Pages is off and the workflow could not turn it on — usually a permissions
-problem. Set it manually at **Settings → Pages → Source: GitHub Actions** and
-re-run the workflow.
+then Pages is off. Turn it on with the setting above and re-run the workflow.
+
+If the **Source** is set to *"Deploy from a branch"* instead, GitHub runs its
+own builder against the repository root, ignores `docs/_config.yml`, and
+publishes your source tree as a website. The tell is a workflow run named
+*"pages build and deployment"* appearing alongside *"Deploy GitHub Pages"*.
 
 ---
 
