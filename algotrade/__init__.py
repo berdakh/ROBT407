@@ -49,6 +49,12 @@ not recommend any strategy, asset or trade.
 * Past performance, simulated or real, does not predict future results.
 """
 
+# Submodules, so `algotrade.metrics.sharpe_ratio(...)` works after a bare
+# `import algotrade` -- which is what notebook code naturally reaches for.
+from . import (  # noqa: E402
+    data, execution, features, indicators, labeling, metrics, naive,
+    portfolio, report, risk, strategy, synthetic, validation, view,
+)
 from .errors import (  # noqa: E402
     AlgotradeError,
     DataIntegrityError,
@@ -76,6 +82,9 @@ from .paper import PaperBroker, PaperTradingSession  # noqa: E402
 
 __all__ = [
     "__version__", "DISCLAIMER",
+    "data", "execution", "features", "indicators", "labeling", "metrics",
+    "naive", "portfolio", "report", "risk", "strategy", "synthetic",
+    "validation", "view",
     "AlgotradeError", "LookAheadError", "DataIntegrityError",
     "InsufficientHistoryError", "RiskLimitError",
     "Clock", "MarketView", "SeriesView",

@@ -61,7 +61,12 @@ def vectorized_backtest(
         ``shift=1`` is the minimum correct value: decide using bar ``t``'s
         close, earn bar ``t+1``'s return.
     cost_bps:
-        Cost in basis points charged on the absolute change in position.
+        Cost in basis points charged on the absolute change in position, i.e.
+        **per side**. A full round trip (0 -> 1 -> 0) changes the position twice
+        and therefore pays this twice. To model a 24 bps round trip, pass 12.
+
+        Getting this backwards doubles your modelled costs, which is an easy
+        way to talk yourself out of a strategy that was merely mediocre.
 
     Warnings
     --------
