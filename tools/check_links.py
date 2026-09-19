@@ -23,6 +23,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs"
+GITHUB_REPO = "berdakh/ROBT407"
 
 MD_LINK = re.compile(r"!?\[[^\]]*\]\(([^)\s]+)(?:\s+\"[^\"]*\")?\)")
 JEKYLL_REL = re.compile(r"\{\{\s*'([^']+)'\s*\|\s*relative_url\s*\}\}")
@@ -93,9 +94,40 @@ def check_notebooks(errors: list[str]) -> int:
     return checked
 
 
+def check_baseurl(errors: list[str]) -> int:
+    """GitHub Pages serves a project site from /<repo>/, not the domain root.
+
+    Without a matching ``baseurl``, Jekyll's ``relative_url`` emits paths like
+    ``/handbook.html``, which resolve to ``<user>.github.io/handbook.html`` --
+    a 404 for every page, stylesheet and diagram. The source paths all look
+    correct, so only a real build reveals it. This check is the cheap guard.
+    """
+    config = DOCS / "_config.yml"
+    if not config.exists():
+        errors.append("docs/_config.yml is missing")
+        return 1
+
+    text = config.read_text()
+    match = re.search(r"^baseurl:\s*[\"']?([^\"'\n]*)", text, re.MULTILINE)
+    expected = "/" + GITHUB_REPO.split("/")[1]
+
+    if match is None:
+        errors.append(
+            f"docs/_config.yml has no baseurl. A project site needs "
+            f'baseurl: "{expected}" or every link 404s.'
+        )
+    elif match.group(1).strip().rstrip("/") != expected:
+        errors.append(
+            f"docs/_config.yml baseurl is {match.group(1).strip()!r}, "
+            f"expected {expected!r} to match the repository name."
+        )
+    return 1
+
+
 def main() -> int:
     errors: list[str] = []
     checked = 0
+    checked += check_baseurl(errors)
 
     for path in [ROOT / "README.md", ROOT / "data" / "README.md", ROOT / "data" / "real" / "README.md"]:
         if path.exists():

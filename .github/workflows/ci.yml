@@ -110,6 +110,61 @@ jobs:
       - name: Check links and Colab badges
         run: python tools/check_links.py
 
+  site-builds:
+    name: Pages site builds
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+
+      - name: Install Jekyll
+        run: gem install --no-document jekyll jekyll-theme-primer jekyll-relative-links
+
+      - name: Build the site
+        # Building it is the only way to catch a whole class of bug that the
+        # source files look fine for. The baseurl one in particular: without
+        # it, every generated link is root-absolute and 404s on a project site.
+        run: jekyll build --source docs --destination _site
+
+      - name: Every internal link resolves against the served base path
+        run: |
+          python3 - <<'PY'
+          import re, sys
+          from pathlib import Path
+
+          site = Path("_site")
+          base = "/ROBT407"
+          missing = []
+          checked = 0
+
+          for page in site.rglob("*.html"):
+              html = page.read_text()
+              for target in re.findall(r'(?:href|src)="([^"]+)"', html):
+                  if target.startswith(("http", "mailto:", "#", "data:")):
+                      continue
+                  checked += 1
+                  if not target.startswith(base + "/"):
+                      missing.append(f"{page.relative_to(site)}: {target} is not under {base}/")
+                      continue
+                  rel = target[len(base) + 1:].split("#")[0].split("?")[0]
+                  if not rel:
+                      rel = "index.html"
+                  if rel.endswith("/"):
+                      rel += "index.html"
+                  if not (site / rel).exists() and rel != "favicon.ico":
+                      missing.append(f"{page.relative_to(site)}: {target} -> no such file")
+
+          if missing:
+              print(f"{len(missing)} broken link(s) in the built site:")
+              for m in missing[:40]:
+                  print(f"  {m}")
+              sys.exit(1)
+          print(f"All {checked} links in the built site resolve under {base}/.")
+          PY
+
   safety:
     name: Safety invariants
     runs-on: ubuntu-latest

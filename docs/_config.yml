@@ -1,5 +1,14 @@
 title: "Algorithmic & AI-Driven Trading"
 description: "A four-day hands-on workshop built around why your backtest is lying to you. Educational use only."
+
+# This is a PROJECT site, served from https://<user>.github.io/ROBT407/ rather
+# than the domain root. Without baseurl, `relative_url` emits root-absolute
+# paths like /handbook.html, which resolve to <user>.github.io/handbook.html --
+# a 404 for every page, stylesheet and diagram on the site.
+#
+# tools/check_links.py asserts this stays in sync with the repository name.
+url: "https://berdakh.github.io"
+baseurl: "/ROBT407"
 theme: jekyll-theme-primer
 show_downloads: false
 plugins:

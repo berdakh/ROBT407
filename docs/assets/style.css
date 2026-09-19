@@ -27,9 +27,13 @@
     --page-warn: #d29922;
     --page-warn-bg: #3d2c00;
     --page-bad-bg: #4a1418;
-    --page-accent-bg: #0c2d6b;
+    --page-accent-bg: #0a1f47;
   }
   body, .markdown-body { background: var(--page-bg); color: var(--page-fg); }
+  /* Primer's link colour is tuned for a white page. On our dark callout
+     backgrounds it measured 2.5:1, well under the 4.5:1 minimum. This pairing
+     measures 7.2:1. */
+  .markdown-body a, .markdown-body a:visited { color: #6cb0ff; }
   .markdown-body table tr { background: var(--page-bg); }
   .markdown-body table tr:nth-child(2n) { background: var(--page-surface); }
   .markdown-body code { background: var(--page-surface); }
