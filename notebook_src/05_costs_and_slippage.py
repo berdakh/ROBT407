@@ -182,7 +182,7 @@ for label, value, note in stages:
 # > at all, returned **+582%**.
 #
 # Roughly 99% of the apparent profit was look-ahead bias. Transaction costs then
-# consumed 96% of what remained. The strategy is not catastrophic \u2014 it ends
+# consumed 95% of what remained. The strategy is not catastrophic \u2014 it ends
 # slightly up \u2014 but it underperforms doing nothing by more than 560
 # percentage points, while requiring 1,592 trades and constant attention.
 #
