@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "algotrade-workshop"
+version = "1.0.0"
+description = "A 4-day hands-on workshop on algorithmic and AI-driven trading, built around why your backtest is lying to you. Educational use only."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = [
+    "numpy>=1.24",
+    "pandas>=2.0",
+    "scipy>=1.10",
+    "scikit-learn>=1.3",
+    "matplotlib>=3.7",
+]
+
+[project.optional-dependencies]
+notebooks = ["jupyter>=1.0", "nbformat>=5.9", "jupytext>=1.15"]
+dev = ["pytest>=7.4", "jupytext>=1.15", "nbformat>=5.9"]
+
+[tool.setuptools]
+packages = ["algotrade"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q --strict-markers"
+filterwarnings = [
+    "error::algotrade.naive.NaiveBacktestWarning",
+]
