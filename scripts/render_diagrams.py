@@ -21,6 +21,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "diagrams" / "src"
+# GitHub Pages serves from docs/, so it cannot reach ../diagrams/. The SVGs are
+# published into the site as well, and --check verifies both copies match the
+# source. Duplicated bytes, single source of truth.
+SITE_COPY = ROOT / "docs" / "assets" / "diagrams"
 sys.path.insert(0, str(SRC))
 
 MODULES = [
@@ -48,13 +52,19 @@ def main() -> int:
         theme.validate(content)
         dest = theme.OUT_DIR / filename
 
+        site_dest = SITE_COPY / filename
+
         if args.check:
             if not dest.exists() or dest.read_text() != content:
                 changed.append(filename)
+            if not site_dest.exists() or site_dest.read_text() != content:
+                changed.append(f"docs/assets/diagrams/{filename}")
             continue
 
         theme.write(filename, content)
-        print(f"  wrote diagrams/svg/{filename}")
+        SITE_COPY.mkdir(parents=True, exist_ok=True)
+        site_dest.write_text(content)
+        print(f"  wrote diagrams/svg/{filename} (+ site copy)")
 
         if args.png:
             out_dir = Path(args.png)

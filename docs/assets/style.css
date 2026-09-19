@@ -1,0 +1,76 @@
+/* Layered on top of the Primer theme. Tokens first so light/dark share a
+   vocabulary; every colour below is a token, never a literal. */
+:root {
+  --page-fg: #1f2328;
+  --page-muted: #57606a;
+  --page-bg: #ffffff;
+  --page-surface: #f6f8fa;
+  --page-line: #d0d7de;
+  --page-accent: #0969da;
+  --page-good: #1a7f37;
+  --page-bad: #cf222e;
+  --page-warn: #9a6700;
+  --page-warn-bg: #fff8c5;
+  --page-bad-bg: #ffebe9;
+  --page-accent-bg: #ddf4ff;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page-fg: #e6edf3;
+    --page-muted: #9198a1;
+    --page-bg: #0d1117;
+    --page-surface: #161b22;
+    --page-line: #30363d;
+    --page-accent: #4493f8;
+    --page-good: #3fb950;
+    --page-bad: #f85149;
+    --page-warn: #d29922;
+    --page-warn-bg: #3d2c00;
+    --page-bad-bg: #4a1418;
+    --page-accent-bg: #0c2d6b;
+  }
+  body, .markdown-body { background: var(--page-bg); color: var(--page-fg); }
+  .markdown-body table tr { background: var(--page-bg); }
+  .markdown-body table tr:nth-child(2n) { background: var(--page-surface); }
+  .markdown-body code { background: var(--page-surface); }
+}
+
+.markdown-body { max-width: 62rem; }
+
+/* Callouts */
+.callout { border-left: 4px solid var(--page-accent); background: var(--page-accent-bg);
+           padding: 0.9rem 1.1rem; border-radius: 6px; margin: 1.2rem 0; }
+.callout.warn { border-color: var(--page-warn); background: var(--page-warn-bg); }
+.callout.danger { border-color: var(--page-bad); background: var(--page-bad-bg); }
+.callout p:last-child { margin-bottom: 0; }
+
+/* The spine figures */
+.spine { display: flex; gap: 0.75rem; flex-wrap: wrap; margin: 1.5rem 0; }
+.spine .step { flex: 1 1 10rem; min-width: 9rem; border: 1.5px solid var(--page-line);
+               border-radius: 8px; padding: 0.9rem; text-align: center; background: var(--page-surface); }
+.spine .step .value { font-size: 1.6rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.spine .step .how { font-size: 0.85rem; }
+.spine .step .note { font-size: 0.75rem; color: var(--page-muted); }
+.spine .bad { border-color: var(--page-bad); }
+.spine .bad .value { color: var(--page-bad); }
+.spine .warn { border-color: var(--page-warn); }
+.spine .warn .value { color: var(--page-warn); }
+.spine .good { border-color: var(--page-good); }
+.spine .good .value { color: var(--page-good); }
+
+/* Day cards */
+.days { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+        gap: 1rem; margin: 1.5rem 0; }
+.day { border: 1.5px solid var(--page-line); border-radius: 8px; padding: 1rem;
+       background: var(--page-surface); }
+.day h3 { margin-top: 0; font-size: 1.05rem; }
+.day .tag { font-size: 0.72rem; letter-spacing: 0.06em; color: var(--page-accent);
+            font-weight: 700; text-transform: uppercase; }
+.day ul { margin-bottom: 0; padding-left: 1.1rem; font-size: 0.9rem; }
+
+img[src$=".svg"] { max-width: 100%; height: auto; display: block; margin: 1.5rem auto; }
+
+@media (max-width: 640px) {
+  .markdown-body { padding: 0 16px; }
+  .spine { flex-direction: column; }
+}

@@ -1,0 +1,12 @@
+title: "Algorithmic & AI-Driven Trading"
+description: "A four-day hands-on workshop built around why your backtest is lying to you. Educational use only."
+theme: jekyll-theme-primer
+show_downloads: false
+plugins:
+  - jekyll-relative-links
+relative_links:
+  enabled: true
+  collections: false
+exclude:
+  - Gemfile
+  - Gemfile.lock
