@@ -1,0 +1,206 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    name: Tests (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev,notebooks]"
+
+      - name: Run tests
+        # The suite must pass with no network and no market data feed. If this
+        # ever needs the internet, the workshop has stopped being usable in a
+        # room with bad wifi, which is most rooms.
+        run: pytest -q
+
+  generated-files-in-sync:
+    name: Generated files match their sources
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev,notebooks]"
+
+      - name: Notebooks match notebook_src/
+        run: python tools/build_notebooks.py --check
+
+      - name: Diagrams match diagrams/src/
+        run: python scripts/render_diagrams.py --check
+
+      - name: Committed datasets match the generator
+        run: |
+          python scripts/build_datasets.py
+          if ! git diff --quiet -- data/synthetic; then
+            echo "::error::data/synthetic/ does not match algotrade/synthetic.py."
+            echo "Run: python scripts/build_datasets.py"
+            git diff --stat -- data/synthetic
+            exit 1
+          fi
+          echo "Committed datasets are reproducible."
+
+  notebooks-execute:
+    name: All notebooks execute
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev,notebooks]"
+
+      - name: Execute every notebook
+        # A workshop notebook that does not run is worse than no notebook,
+        # because the student assumes the error is theirs.
+        run: python tools/run_notebooks.py
+
+  links:
+    name: Internal links resolve
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev,notebooks]"
+
+      - name: Check links and Colab badges
+        run: python tools/check_links.py
+
+  site-builds:
+    name: Pages site builds
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+
+      - name: Install Jekyll
+        run: gem install --no-document jekyll jekyll-theme-primer jekyll-relative-links
+
+      - name: Build the site
+        # Building it is the only way to catch a whole class of bug that the
+        # source files look fine for. The baseurl one in particular: without
+        # it, every generated link is root-absolute and 404s on a project site.
+        run: jekyll build --source docs --destination _site
+
+      - name: Every internal link resolves against the served base path
+        run: |
+          python3 - <<'PY'
+          import re, sys
+          from pathlib import Path
+
+          site = Path("_site")
+          base = "/ROBT407"
+          missing = []
+          checked = 0
+
+          for page in site.rglob("*.html"):
+              html = page.read_text()
+              for target in re.findall(r'(?:href|src)="([^"]+)"', html):
+                  if target.startswith(("http", "mailto:", "#", "data:")):
+                      continue
+                  checked += 1
+                  if not target.startswith(base + "/"):
+                      missing.append(f"{page.relative_to(site)}: {target} is not under {base}/")
+                      continue
+                  rel = target[len(base) + 1:].split("#")[0].split("?")[0]
+                  if not rel:
+                      rel = "index.html"
+                  if rel.endswith("/"):
+                      rel += "index.html"
+                  if not (site / rel).exists() and rel != "favicon.ico":
+                      missing.append(f"{page.relative_to(site)}: {target} -> no such file")
+
+          if missing:
+              print(f"{len(missing)} broken link(s) in the built site:")
+              for m in missing[:40]:
+                  print(f"  {m}")
+              sys.exit(1)
+          print(f"All {checked} links in the built site resolve under {base}/.")
+          PY
+
+  safety:
+    name: Safety invariants
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev,notebooks]"
+
+      - name: No live trading path exists
+        run: |
+          pytest tests/test_offline_and_safety.py -q
+
+      - name: No exchange client in the required path
+        run: |
+          if grep -rEn "^\s*import (ccxt|alpaca|binance)|^\s*from (ccxt|alpaca|binance)" \
+               algotrade/ notebook_src/ tests/; then
+            echo "::error::An exchange client is imported in the required path."
+            echo "This workshop is paper-trading only; only scripts/ may touch the network."
+            exit 1
+          fi
+          echo "No exchange clients in algotrade/, notebook_src/ or tests/."
+
+      - name: Disclaimer present where it matters
+        run: |
+          fail=0
+          grep -q "not investment advice" README.md -i || { echo "::error::README missing disclaimer"; fail=1; }
+          grep -q "NOT INVESTMENT ADVICE" algotrade/__init__.py || { echo "::error::package missing disclaimer"; fail=1; }
+          grep -q "not investment advice" docs/index.md -i || { echo "::error::site missing disclaimer"; fail=1; }
+          grep -q "not investment advice" notebook_src/13_capstone.py -i || { echo "::error::capstone missing disclaimer"; fail=1; }
+          grep -q "Educational use only" docs/handbook.md -i || { echo "::error::handbook missing disclaimer"; fail=1; }
+          exit $fail

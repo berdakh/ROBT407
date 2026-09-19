@@ -1,0 +1,18 @@
+# Core (required path). Pinned loosely so Colab's preinstalled versions work.
+numpy>=1.24
+pandas>=2.0
+scipy>=1.10
+scikit-learn>=1.3
+matplotlib>=3.7
+
+# Notebook tooling
+jupyter>=1.0
+nbformat>=5.9
+jupytext>=1.15
+
+# Tests
+pytest>=7.4
+
+# OPTIONAL — only for scripts/fetch_market_data.py (needs network, no API key).
+# Nothing in the required path imports these.
+# ccxt>=4.0

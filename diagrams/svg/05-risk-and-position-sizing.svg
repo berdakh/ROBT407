@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 620" width="960" height="620" role="img" aria-labelledby="title desc" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif">
+  <title id="title">Position sizing and risk control</title>
+  <desc id="desc">A signal says which way to lean; sizing says how much. Volatility targeting scales exposure inversely to recent realised volatility so the portfolio runs at roughly constant risk. Drawdown arithmetic is asymmetric: a 50 percent loss needs a 100 percent gain to recover.</desc>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --fg: #1f2328;
+      --muted: #57606a;
+      --line: #d0d7de;
+      --surface: #f6f8fa;
+      --accent: #0969da;
+      --accent-bg: #ddf4ff;
+      --good: #1a7f37;
+      --good-bg: #dafbe1;
+      --bad: #cf222e;
+      --bad-bg: #ffebe9;
+      --warn: #9a6700;
+      --warn-bg: #fff8c5;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0d1117;
+        --fg: #e6edf3;
+        --muted: #9198a1;
+        --line: #30363d;
+        --surface: #161b22;
+        --accent: #4493f8;
+        --accent-bg: #0c2d6b;
+        --good: #3fb950;
+        --good-bg: #0f3d1c;
+        --bad: #f85149;
+        --bad-bg: #4a1418;
+        --warn: #d29922;
+        --warn-bg: #3d2c00;
+      }
+    }
+    .bg { fill: var(--bg); }
+    text { fill: var(--fg); }
+    .muted { fill: var(--muted); }
+    .mono { font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; }
+    .card { fill: var(--surface); stroke: var(--line); }
+    .edge { stroke: var(--line); fill: none; }
+  </style>
+  <rect class="bg" width="960" height="620"/>
+  <text x="480.0" y="34" font-size="22" font-weight="650" text-anchor="middle">Position sizing: the half that beginners skip</text>
+  <text x="480.0" y="57" font-size="13" font-weight="400" text-anchor="middle" class="muted">The signal picks a direction. Sizing decides whether you survive being wrong.</text>
+  <rect x="46" y="84" width="452" height="296" rx="8" fill="var(--surface)" stroke="var(--line)" stroke-width="1.5"/>
+  <text x="66" y="112" font-size="15" font-weight="650" text-anchor="start">Volatility targeting</text>
+  <text x="66" y="132" font-size="11.5" font-weight="400" text-anchor="start" class="muted mono">weight = target_vol / recent_realised_vol   (capped)</text>
+  <line x1="80" y1="234" x2="456" y2="234" stroke="var(--line)" stroke-width="1.2" stroke-linecap="round"/>
+  <path d="M 80.0 213.8 L 86.3 215.8 L 92.5 217.8 L 98.8 219.7 L 105.1 221.4 L 111.3 223.0 L 117.6 224.4 L 123.9 225.5 L 130.1 226.4 L 136.4 226.9 L 142.7 227.2 L 148.9 227.2 L 155.2 226.9 L 161.5 226.3 L 167.7 225.4 L 174.0 224.2 L 180.3 222.8 L 186.5 221.2 L 192.8 219.4 L 199.1 217.4 L 205.3 215.3 L 211.6 213.2 L 217.9 210.9 L 224.1 208.6 L 230.4 206.2 L 236.7 203.8 L 242.9 201.3 L 249.2 198.6 L 255.5 195.8 L 261.7 192.7 L 268.0 189.2 L 274.3 185.5 L 280.5 181.7 L 286.8 177.9 L 293.1 174.3 L 299.3 171.4 L 305.6 169.1 L 311.9 167.6 L 318.1 167.0 L 324.4 167.0 L 330.7 167.6 L 336.9 168.6 L 343.2 169.9 L 349.5 171.4 L 355.7 173.1 L 362.0 174.7 L 368.3 176.2 L 374.5 177.7 L 380.8 178.9 L 387.1 180.0 L 393.3 180.8 L 399.6 181.3 L 405.9 181.6 L 412.1 181.5 L 418.4 181.1 L 424.7 180.5 L 430.9 179.6 L 437.2 178.4 L 443.5 177.0 L 449.7 175.4 L 456.0 173.6" stroke="var(--bad)" stroke-width="2.2" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+  <text x="74" y="166" font-size="10.5" font-weight="400" text-anchor="end" fill="var(--bad)">realised</text>
+  <text x="74" y="179" font-size="10.5" font-weight="400" text-anchor="end" fill="var(--bad)">volatility</text>
+  <line x1="80" y1="338" x2="456" y2="338" stroke="var(--line)" stroke-width="1.2" stroke-linecap="round"/>
+  <path d="M 80.0 288.7 L 86.3 286.1 L 92.5 283.3 L 98.8 280.3 L 105.1 277.2 L 111.3 274.2 L 117.6 271.2 L 123.9 268.6 L 130.1 266.4 L 136.4 264.9 L 142.7 264.1 L 148.9 264.2 L 155.2 265.0 L 161.5 266.6 L 167.7 268.8 L 174.0 271.5 L 180.3 274.5 L 186.5 277.6 L 192.8 280.8 L 199.1 283.8 L 205.3 286.7 L 211.6 289.5 L 217.9 292.0 L 224.1 294.3 L 230.4 296.5 L 236.7 298.5 L 242.9 300.3 L 249.2 302.1 L 255.5 303.9 L 261.7 305.6 L 268.0 307.3 L 274.3 309.0 L 280.5 310.5 L 286.8 311.9 L 293.1 313.1 L 299.3 314.0 L 305.6 314.6 L 311.9 315.0 L 318.1 315.2 L 324.4 315.2 L 330.7 315.0 L 336.9 314.7 L 343.2 314.4 L 349.5 313.9 L 355.7 313.5 L 362.0 313.0 L 368.3 312.5 L 374.5 312.0 L 380.8 311.5 L 387.1 311.2 L 393.3 310.9 L 399.6 310.7 L 405.9 310.6 L 412.1 310.6 L 418.4 310.7 L 424.7 311.0 L 430.9 311.3 L 437.2 311.7 L 443.5 312.2 L 449.7 312.7 L 456.0 313.3" stroke="var(--accent)" stroke-width="2.2" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+  <text x="74" y="276" font-size="10.5" font-weight="400" text-anchor="end" fill="var(--accent)">position</text>
+  <text x="74" y="289" font-size="10.5" font-weight="400" text-anchor="end" fill="var(--accent)">size</text>
+  <line x1="313.12" y1="156" x2="313.12" y2="346" stroke="var(--warn)" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="4 4"/>
+  <text x="305.12" y="152" font-size="10.5" font-weight="400" text-anchor="end" fill="var(--warn)">volatility spikes</text>
+  <text x="321.12" y="264" font-size="10.5" font-weight="400" text-anchor="start" fill="var(--warn)">exposure falls</text>
+  <text x="66" y="358" font-size="11.5" font-weight="400" text-anchor="start" class="muted">Constant risk, not constant notional. The cap matters: uncapped,</text>
+  <text x="66" y="373" font-size="11.5" font-weight="400" text-anchor="start" class="muted">a quiet market demands huge leverage at the worst moment.</text>
+  <rect x="514" y="84" width="400" height="296" rx="8" fill="var(--surface)" stroke="var(--line)" stroke-width="1.5"/>
+  <text x="534" y="112" font-size="15" font-weight="650" text-anchor="start">Why drawdown is the limit that binds</text>
+  <text x="534" y="132" font-size="11.5" font-weight="400" text-anchor="start" class="muted">Losses and recoveries are not symmetric.</text>
+  <text x="536" y="170" font-size="12" font-weight="600" text-anchor="start" class="mono" fill="var(--bad)">-10%</text>
+  <rect x="584" y="158" width="15.0" height="14" rx="3" fill="var(--bad-bg)" stroke="var(--bad)" stroke-width="1"/>
+  <rect x="584" y="174" width="16.5" height="14" rx="3" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <text x="748" y="178" font-size="11.5" font-weight="600" text-anchor="start" class="mono" fill="var(--good)">+11%</text>
+  <text x="536" y="208" font-size="12" font-weight="600" text-anchor="start" class="mono" fill="var(--bad)">-25%</text>
+  <rect x="584" y="196" width="37.5" height="14" rx="3" fill="var(--bad-bg)" stroke="var(--bad)" stroke-width="1"/>
+  <rect x="584" y="212" width="49.5" height="14" rx="3" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <text x="748" y="216" font-size="11.5" font-weight="600" text-anchor="start" class="mono" fill="var(--good)">+33%</text>
+  <text x="536" y="246" font-size="12" font-weight="600" text-anchor="start" class="mono" fill="var(--bad)">-50%</text>
+  <rect x="584" y="234" width="75.0" height="14" rx="3" fill="var(--bad-bg)" stroke="var(--bad)" stroke-width="1"/>
+  <rect x="584" y="250" width="150.0" height="14" rx="3" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <text x="748" y="254" font-size="11.5" font-weight="600" text-anchor="start" class="mono" fill="var(--good)">+100%</text>
+  <text x="536" y="284" font-size="12" font-weight="600" text-anchor="start" class="mono" fill="var(--bad)">-75%</text>
+  <rect x="584" y="272" width="112.5" height="14" rx="3" fill="var(--bad-bg)" stroke="var(--bad)" stroke-width="1"/>
+  <rect x="584" y="288" width="150.0" height="14" rx="3" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <text x="737" y="299" font-size="13" font-weight="700" text-anchor="start" fill="var(--good)">›</text>
+  <text x="748" y="292" font-size="11.5" font-weight="600" text-anchor="start" class="mono" fill="var(--good)">+300%</text>
+  <text x="536" y="322" font-size="12" font-weight="600" text-anchor="start" class="mono" fill="var(--bad)">-90%</text>
+  <rect x="584" y="310" width="135.0" height="14" rx="3" fill="var(--bad-bg)" stroke="var(--bad)" stroke-width="1"/>
+  <rect x="584" y="326" width="150.0" height="14" rx="3" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <text x="737" y="337" font-size="13" font-weight="700" text-anchor="start" fill="var(--good)">›</text>
+  <text x="748" y="330" font-size="11.5" font-weight="600" text-anchor="start" class="mono" fill="var(--good)">+900%</text>
+  <text x="536" y="358" font-size="11.5" font-weight="400" text-anchor="start" class="muted">A 50% drawdown is not twice as bad as a 25% one.</text>
+  <text x="536" y="373" font-size="11.5" font-weight="400" text-anchor="start" class="muted">It is four times harder to climb out of.</text>
+  <rect x="46.0" y="404" width="277.3333333333333" height="128" rx="8" fill="var(--surface)" stroke="var(--warn)" stroke-width="1.6"/>
+  <text x="62.0" y="430" font-size="13" font-weight="650" text-anchor="start" fill="var(--warn)">Fixed fraction of equity</text>
+  <text x="62.0" y="450" font-size="10.5" font-weight="400" text-anchor="start" class="muted mono">weight = 0.5, always</text>
+  <text x="62.0" y="472" font-size="11" font-weight="400" text-anchor="start">Simple. Risk swings with the market:</text>
+  <text x="62.0" y="487" font-size="11" font-weight="400" text-anchor="start">your worst days cluster exactly when</text>
+  <text x="62.0" y="502" font-size="11" font-weight="400" text-anchor="start">volatility is highest.</text>
+  <rect x="341.3333333333333" y="404" width="277.3333333333333" height="128" rx="8" fill="var(--surface)" stroke="var(--good)" stroke-width="1.6"/>
+  <text x="357.3333333333333" y="430" font-size="13" font-weight="650" text-anchor="start" fill="var(--good)">Volatility targeting</text>
+  <text x="357.3333333333333" y="450" font-size="10.5" font-weight="400" text-anchor="start" class="muted mono">weight = target_vol / realised_vol</text>
+  <text x="357.3333333333333" y="472" font-size="11" font-weight="400" text-anchor="start">Roughly constant risk. The standard</text>
+  <text x="357.3333333333333" y="487" font-size="11" font-weight="400" text-anchor="start">choice. Needs a leverage cap or it</text>
+  <text x="357.3333333333333" y="502" font-size="11" font-weight="400" text-anchor="start">blows up in quiet markets.</text>
+  <rect x="636.6666666666666" y="404" width="277.3333333333333" height="128" rx="8" fill="var(--surface)" stroke="var(--good)" stroke-width="1.6"/>
+  <text x="652.6666666666666" y="430" font-size="13" font-weight="650" text-anchor="start" fill="var(--good)">Fixed fractional (stop-based)</text>
+  <text x="652.6666666666666" y="450" font-size="10.5" font-weight="400" text-anchor="start" class="muted mono">units = equity x risk% / stop_distance</text>
+  <text x="652.6666666666666" y="472" font-size="11" font-weight="400" text-anchor="start">Risk a fixed % per trade. Position</text>
+  <text x="652.6666666666666" y="487" font-size="11" font-weight="400" text-anchor="start">shrinks automatically when your stop</text>
+  <text x="652.6666666666666" y="502" font-size="11" font-weight="400" text-anchor="start">has to be far away.</text>
+  <text x="480.0" y="592" font-size="12" font-weight="400" text-anchor="middle" class="muted">Kelly sizing maximises growth if you know the true mean. You do not. Practitioners who use it use a quarter of it.</text>
+</svg>
