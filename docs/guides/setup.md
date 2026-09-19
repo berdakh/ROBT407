@@ -151,6 +151,26 @@ dark PNGs, because most rasterisers do not implement `var()`.
 
 ---
 
+## How the site is published
+
+`.github/workflows/pages.yml` builds `docs/` with Jekyll and deploys it on every
+push to `master`. The workflow passes `enablement: true` to
+`actions/configure-pages`, so it switches Pages on by itself the first time it
+runs.
+
+If a deploy ever fails at the `configure-pages` step with
+
+```
+Get Pages site failed. Please verify that the repository has Pages enabled
+and configured to build using GitHub Actions ... Error: Not Found
+```
+
+then Pages is off and the workflow could not turn it on — usually a permissions
+problem. Set it manually at **Settings → Pages → Source: GitHub Actions** and
+re-run the workflow.
+
+---
+
 ## Troubleshooting
 
 **`FileNotFoundError: data/synthetic/gbm.csv`** — Jupyter was started somewhere
