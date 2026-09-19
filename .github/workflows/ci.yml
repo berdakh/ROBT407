@@ -127,7 +127,7 @@ jobs:
           source: ./docs
           destination: ./_site
 
-      - name: Every internal link resolves against the served base path
+      - name: Every internal link resolves
         run: |
           python3 - <<'PY'
           import re, sys
@@ -138,19 +138,36 @@ jobs:
           problems = []
           checked = 0
 
+          # Two legitimate link shapes, and a browser treats them differently:
+          #   "/ROBT407/plan.html"  root-absolute, resolved against the site root
+          #   "plan.html"           relative, resolved against the PAGE's directory
+          # An earlier version of this check demanded the first form and failed
+          # the build on the second, which is valid and which Jekyll emits for
+          # plain markdown links. A checker that rejects working links is worse
+          # than none, because people learn to ignore it.
           for page in site.rglob("*.html"):
               html = page.read_text(errors="replace")
               for target in re.findall(r'(?:href|src)="([^"]+)"', html):
                   if target.startswith(("http", "mailto:", "#", "data:", "//")):
                       continue
                   checked += 1
-                  if not target.startswith(base + "/"):
-                      problems.append(f"{page.relative_to(site)}: {target} is not under {base}/")
-                      continue
-                  rel = target[len(base) + 1:].split("#")[0].split("?")[0]
-                  if not rel or rel.endswith("/"):
-                      rel += "index.html"
-                  if not (site / rel).exists() and rel != "favicon.ico":
+                  clean = target.split("#")[0].split("?")[0]
+                  if not clean:
+                      continue                       # same-page anchor
+
+                  if clean.startswith("/"):
+                      if not clean.startswith(base + "/"):
+                          problems.append(
+                              f"{page.relative_to(site)}: {target} is root-absolute but "
+                              f"not under {base}/ -- it will 404 on the project site")
+                          continue
+                      resolved = site / clean[len(base) + 1:]
+                  else:
+                      resolved = page.parent / clean
+
+                  if resolved.is_dir():
+                      resolved = resolved / "index.html"
+                  if not resolved.exists() and resolved.name != "favicon.ico":
                       problems.append(f"{page.relative_to(site)}: {target} -> no such file")
 
           if problems:
@@ -158,7 +175,7 @@ jobs:
               for p in problems[:40]:
                   print(f"  {p}")
               sys.exit(1)
-          print(f"All {checked} links in the built site resolve under {base}/.")
+          print(f"All {checked} links in the built site resolve.")
           PY
 
       - name: The landing page and notebook index actually built
