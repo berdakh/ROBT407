@@ -30,6 +30,26 @@ JEKYLL_REL = re.compile(r"\{\{\s*'([^']+)'\s*\|\s*relative_url\s*\}\}")
 HTML_SRC = re.compile(r'<(?:img|link)[^>]+(?:src|href)="([^"]+)"')
 
 
+def _page_exists(base_dir: Path, target: str) -> bool:
+    """Does this link resolve, accounting for Jekyll's .md -> .html rewrite?
+
+    Inside docs/ a link to `plan.html` is satisfied by `plan.md`, and `guides/`
+    by `guides/index.md`. Checking the raw path alone reports every internal
+    page link as broken, which is how this function came to exist.
+    """
+    raw = target.split("#")[0].split("?")[0]
+    if not raw:
+        return True                      # a bare "#anchor" on the same page
+    candidate = (base_dir / raw).resolve()
+    if candidate.exists():
+        return True
+    if raw.endswith("/"):
+        return (candidate / "index.md").exists() or (candidate / "index.html").exists()
+    if raw.endswith(".html"):
+        return candidate.with_suffix(".md").exists()
+    return False
+
+
 def resolve_docs_path(target: str) -> Path | None:
     """Map a site path like /guides/tools.html to a file in docs/."""
     clean = target.lstrip("/").split("#")[0]
@@ -55,8 +75,7 @@ def check_markdown(path: Path, errors: list[str]) -> int:
         if "{{" in target:
             continue                      # handled by the Jekyll pass below
         checked += 1
-        resolved = (path.parent / target.split("#")[0]).resolve()
-        if not resolved.exists():
+        if not _page_exists(path.parent, target):
             errors.append(f"{path.relative_to(ROOT)}: broken link -> {target}")
 
     for target in JEKYLL_REL.findall(text):
@@ -64,6 +83,33 @@ def check_markdown(path: Path, errors: list[str]) -> int:
         if resolve_docs_path(target) is None:
             errors.append(f"{path.relative_to(ROOT)}: relative_url does not resolve -> {target}")
 
+    return checked
+
+
+def check_every_notebook_is_listed(errors: list[str]) -> int:
+    """The notebook tables are hand-written; make sure none drifts out.
+
+    docs/notebooks.md and docs/index.md each carry a table of every notebook
+    with its Colab link. Adding a notebook and forgetting the table is the
+    obvious failure, and it is invisible until a student cannot find it.
+    """
+    notebooks = sorted(p.stem for p in (ROOT / "notebooks").glob("*.ipynb"))
+    if not notebooks:
+        errors.append("no notebooks found in notebooks/")
+        return 1
+
+    checked = 0
+    for page in ("docs/notebooks.md", "docs/index.md"):
+        path = ROOT / page
+        if not path.exists():
+            errors.append(f"{page} is missing")
+            continue
+        text = path.read_text()
+        for stem in notebooks:
+            checked += 1
+            colab = f"colab.research.google.com/github/{GITHUB_REPO}/blob/master/notebooks/{stem}.ipynb"
+            if colab not in text:
+                errors.append(f"{page}: no Colab link for notebooks/{stem}.ipynb")
     return checked
 
 
@@ -87,8 +133,7 @@ def check_notebooks(errors: list[str]) -> int:
             if target.startswith(("http://", "https://", "#")):
                 continue
             checked += 1
-            resolved = (path.parent / target.split("#")[0]).resolve()
-            if not resolved.exists():
+            if not _page_exists(path.parent, target):
                 errors.append(f"notebooks/{path.name}: broken reference -> {target}")
 
     return checked
@@ -128,6 +173,7 @@ def main() -> int:
     errors: list[str] = []
     checked = 0
     checked += check_baseurl(errors)
+    checked += check_every_notebook_is_listed(errors)
 
     for path in [ROOT / "README.md", ROOT / "data" / "README.md", ROOT / "data" / "real" / "README.md"]:
         if path.exists():

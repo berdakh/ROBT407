@@ -1,10 +1,8 @@
 ---
+title: Handbook
 layout: default
-title: The Handbook
+nav_order: 4
 ---
-
-<link rel="stylesheet" href="{{ '/assets/style.css' | relative_url }}">
-
 # The Handbook
 
 **Background reading. No code.**
@@ -530,5 +528,3 @@ your method on data with no signal in it before you believe the result.
 
 Those two habits will save you more time than everything else here combined.
 </div>
-
-[← Back to the workshop]({{ '/' | relative_url }})

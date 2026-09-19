@@ -5,6 +5,7 @@ finance background required. Everything runs offline on a normal laptop, and in
 Google Colab.
 
 📖 **[Workshop site →](https://berdakh.github.io/ROBT407/)** ·
+[Notebooks (Open in Colab)](https://berdakh.github.io/ROBT407/notebooks.html) ·
 [Handbook](https://berdakh.github.io/ROBT407/handbook.html) ·
 [Day plan](https://berdakh.github.io/ROBT407/plan.html) ·
 [Tool ecosystem](https://berdakh.github.io/ROBT407/guides/tools.html)
@@ -63,8 +64,12 @@ python tools/run_notebooks.py      # all 13 notebooks execute
 jupyter notebook notebooks/
 ```
 
-Sample data is committed, so everything runs offline immediately. Or click the
-**Open in Colab** badge on any notebook — the first cell sets itself up.
+Sample data is committed, so everything runs offline immediately.
+
+**No install at all?** Every notebook opens in Google Colab with one click —
+see [the notebooks page](https://berdakh.github.io/ROBT407/notebooks.html), or
+click the badge at the top of any notebook. The first cell clones the repo and
+installs the package for you.
 
 ## What's here
 

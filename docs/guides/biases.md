@@ -1,10 +1,9 @@
 ---
-layout: default
 title: Bias reference
+layout: default
+nav_order: 2
+parent: Guides
 ---
-
-<link rel="stylesheet" href="{{ '/assets/style.css' | relative_url }}">
-
 # Bias reference
 
 A one-page catalogue. Each entry: what it is, how it gets in, how to detect it,
@@ -187,5 +186,3 @@ Before believing any backtest — your own most of all:
 
 `report_card()` automates 2, 3, 4, 6 and 8 as warnings. The rest require honesty,
 which is the hard part and the one tooling cannot supply.
-
-[← Back to the workshop]({{ '/' | relative_url }})

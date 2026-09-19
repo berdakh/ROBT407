@@ -1,0 +1,109 @@
+// Additions on top of just-the-docs. Tokens only -- no literal colours in
+// rules, so light and dark stay in step.
+
+// The spine: the four figures that carry the whole course.
+.spine {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin: 1.5rem 0;
+}
+
+.spine .step {
+  flex: 1 1 10rem;
+  min-width: 9rem;
+  border: 1.5px solid $border-color;
+  border-radius: 8px;
+  padding: 0.9rem;
+  text-align: center;
+  background: $sidebar-color;
+}
+
+.spine .step .value {
+  font-size: 1.7rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.15;
+}
+
+.spine .step .how { font-size: 0.85rem; }
+.spine .step .note { font-size: 0.75rem; color: $grey-dk-000; }
+
+.spine .bad  { border-color: $red-200;   .value { color: $red-200; } }
+.spine .warn { border-color: $yellow-200;.value { color: $yellow-200; } }
+.spine .good { border-color: $green-200; .value { color: $green-200; } }
+
+// Diagrams are wide; let them use the full column and stay legible.
+img[src$=".svg"] {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1.5rem auto;
+}
+
+// Colab badges sit in table cells; keep them from stretching the row.
+img[src*="colab-badge"] {
+  display: inline-block;
+  margin: 0;
+  vertical-align: middle;
+}
+
+@media (max-width: 640px) {
+  .spine { flex-direction: column; }
+}
+
+// The notebook listing. Markdown tables default to auto layout, which gave the
+// description column ~90px and wrapped it one word per line.
+//
+// NOTE: a kramdown IAL after a table (`{: .nb-table }`) puts the class on the
+// <table> element itself, NOT on a wrapper -- so `.nb-table table { }` matches
+// nothing. just-the-docs supplies its own `.table-wrapper` div around it, which
+// already handles horizontal overflow.
+table.nb-table {
+  table-layout: fixed;
+  width: 100%;
+  min-width: 47rem;          // below this the wrapper scrolls instead of crushing
+
+  th, td {
+    padding: 0.45rem 0.6rem;
+    vertical-align: middle;
+    font-size: 0.8rem;
+    line-height: 1.35;
+  }
+
+  // Day | # | Notebook | What it does | Runs in | Open
+  th:nth-child(1), td:nth-child(1) { width: 4rem;    text-align: center; }
+  th:nth-child(2), td:nth-child(2) { width: 2.6rem;  text-align: center; }
+  th:nth-child(3), td:nth-child(3) { width: 9.5rem; }
+  th:nth-child(4), td:nth-child(4) { width: auto; }     // takes the remainder
+  th:nth-child(5), td:nth-child(5) { width: 5rem;    text-align: center; }
+  td:last-child                    { width: 8rem;    text-align: center; }
+}
+
+// The landing page's five-column variant has no "Runs in".
+.home table.nb-table {
+  min-width: 40rem;
+  th:nth-child(5), td:nth-child(5) { width: 8rem; text-align: center; }
+}
+
+// The sidebar title.
+//
+// .site-header is a 60px flex row with `align-items: center`, and .site-title
+// is allowed to grow taller than it. A title that wraps to three lines measured
+// 114px and was centred on a 60px box -- so 27px of it hung ABOVE the viewport
+// and the first line was invisible. Measured in the browser, not guessed.
+//
+// Fix both halves: let the header grow, and stop centring an oversized child.
+.side-bar .site-header {
+  height: auto;
+  min-height: 3.75rem;
+  align-items: stretch;
+}
+
+.side-bar .site-title.lh-tight {
+  height: auto;
+  line-height: 1.25;
+  padding-top: 0.8rem;
+  padding-bottom: 0.8rem;
+  white-space: normal;
+}

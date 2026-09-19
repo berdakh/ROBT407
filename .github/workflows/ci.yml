@@ -116,20 +116,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: ruby/setup-ruby@v1
+      - name: Build the site exactly as Pages does
+        # Deliberately the SAME action the deploy workflow uses, rather than a
+        # hand-rolled `gem install jekyll ...`. An earlier version of this job
+        # installed a different gem set from production, which means it could
+        # have gone green while the real deploy broke -- and the site uses a
+        # remote_theme that only the github-pages gem bundle resolves.
+        uses: actions/jekyll-build-pages@v1
         with:
-          ruby-version: "3.3"
+          source: ./docs
+          destination: ./_site
 
-      - name: Install Jekyll
-        run: gem install --no-document jekyll jekyll-theme-primer jekyll-relative-links
-
-      - name: Build the site
-        # Building it is the only way to catch a whole class of bug that the
-        # source files look fine for. The baseurl one in particular: without
-        # it, every generated link is root-absolute and 404s on a project site.
-        run: jekyll build --source docs --destination _site
-
-      - name: Every internal link resolves against the served base path
+      - name: Every internal link resolves
         run: |
           python3 - <<'PY'
           import re, sys
@@ -137,33 +135,57 @@ jobs:
 
           site = Path("_site")
           base = "/ROBT407"
-          missing = []
+          problems = []
           checked = 0
 
+          # Two legitimate link shapes, and a browser treats them differently:
+          #   "/ROBT407/plan.html"  root-absolute, resolved against the site root
+          #   "plan.html"           relative, resolved against the PAGE's directory
+          # An earlier version of this check demanded the first form and failed
+          # the build on the second, which is valid and which Jekyll emits for
+          # plain markdown links. A checker that rejects working links is worse
+          # than none, because people learn to ignore it.
           for page in site.rglob("*.html"):
-              html = page.read_text()
+              html = page.read_text(errors="replace")
               for target in re.findall(r'(?:href|src)="([^"]+)"', html):
-                  if target.startswith(("http", "mailto:", "#", "data:")):
+                  if target.startswith(("http", "mailto:", "#", "data:", "//")):
                       continue
                   checked += 1
-                  if not target.startswith(base + "/"):
-                      missing.append(f"{page.relative_to(site)}: {target} is not under {base}/")
-                      continue
-                  rel = target[len(base) + 1:].split("#")[0].split("?")[0]
-                  if not rel:
-                      rel = "index.html"
-                  if rel.endswith("/"):
-                      rel += "index.html"
-                  if not (site / rel).exists() and rel != "favicon.ico":
-                      missing.append(f"{page.relative_to(site)}: {target} -> no such file")
+                  clean = target.split("#")[0].split("?")[0]
+                  if not clean:
+                      continue                       # same-page anchor
 
-          if missing:
-              print(f"{len(missing)} broken link(s) in the built site:")
-              for m in missing[:40]:
-                  print(f"  {m}")
+                  if clean.startswith("/"):
+                      if not clean.startswith(base + "/"):
+                          problems.append(
+                              f"{page.relative_to(site)}: {target} is root-absolute but "
+                              f"not under {base}/ -- it will 404 on the project site")
+                          continue
+                      resolved = site / clean[len(base) + 1:]
+                  else:
+                      resolved = page.parent / clean
+
+                  if resolved.is_dir():
+                      resolved = resolved / "index.html"
+                  if not resolved.exists() and resolved.name != "favicon.ico":
+                      problems.append(f"{page.relative_to(site)}: {target} -> no such file")
+
+          if problems:
+              print(f"{len(problems)} broken link(s) in the built site:")
+              for p in problems[:40]:
+                  print(f"  {p}")
               sys.exit(1)
-          print(f"All {checked} links in the built site resolve under {base}/.")
+          print(f"All {checked} links in the built site resolve.")
           PY
+
+      - name: The landing page and notebook index actually built
+        run: |
+          for f in index.html notebooks.html plan.html handbook.html \
+                   guides/index.html guides/setup.html guides/tools.html \
+                   guides/biases.html guides/library.html; do
+            test -s "_site/$f" || { echo "::error::_site/$f missing or empty"; exit 1; }
+          done
+          echo "All 9 pages built."
 
   safety:
     name: Safety invariants

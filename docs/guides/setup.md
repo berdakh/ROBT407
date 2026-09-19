@@ -1,10 +1,9 @@
 ---
-layout: default
 title: Setup
+layout: default
+nav_order: 1
+parent: Guides
 ---
-
-<link rel="stylesheet" href="{{ '/assets/style.css' | relative_url }}">
-
 # Setup
 
 Three ways to run the workshop. All of them work offline once set up, and none
@@ -152,6 +151,34 @@ dark PNGs, because most rasterisers do not implement `var()`.
 
 ---
 
+## How the site is published
+
+`.github/workflows/pages.yml` builds `docs/` with Jekyll and deploys it on every
+push to `master`.
+
+**Pages has to be switched on once, by hand**, at
+**Settings → Pages → Source: GitHub Actions**. The workflow cannot do it for
+you: enabling Pages calls a "create a Pages site" API that needs admin rights,
+and the workflow's token only has `pages: write`, which covers deploying to an
+existing site. Trying it anyway fails with *"Resource not accessible by
+integration"*.
+
+If a deploy fails at the `configure-pages` step with
+
+```
+Get Pages site failed. Please verify that the repository has Pages enabled
+and configured to build using GitHub Actions ... Error: Not Found
+```
+
+then Pages is off. Turn it on with the setting above and re-run the workflow.
+
+If the **Source** is set to *"Deploy from a branch"* instead, GitHub runs its
+own builder against the repository root, ignores `docs/_config.yml`, and
+publishes your source tree as a website. The tell is a workflow run named
+*"pages build and deployment"* appearing alongside *"Deploy GitHub Pages"*.
+
+---
+
 ## Troubleshooting
 
 **`FileNotFoundError: data/synthetic/gbm.csv`** — Jupyter was started somewhere
@@ -170,5 +197,3 @@ elapsed. Guard with `if len(view) < self.warmup: return None`.
 
 **`NaiveBacktestWarning`** — `vectorized_backtest` is telling you it is producing
 an unachievable number. That is its job; it is a teaching exhibit, not a tool.
-
-[← Back to the workshop]({{ '/' | relative_url }})
