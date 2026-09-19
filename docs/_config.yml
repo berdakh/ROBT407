@@ -1,21 +1,74 @@
-title: "Algorithmic & AI-Driven Trading"
-description: "A four-day hands-on workshop built around why your backtest is lying to you. Educational use only."
+# GitHub Pages configuration for the ROBT407 algorithmic trading workshop.
+#
+# Published from /docs. Settings -> Pages -> Source: "GitHub Actions", which
+# runs .github/workflows/pages.yml. (Do NOT set `enablement: true` on
+# actions/configure-pages: the workflow's GITHUB_TOKEN cannot create a Pages
+# site -- `pages: write` covers deploying to an existing one, not creating it --
+# and it fails with "Resource not accessible by integration". Enabling Pages is
+# a one-time manual step for a repository admin.)
+
+# Kept short: this is the sidebar heading and the search placeholder.
+# The landing page's own h1 carries the full name.
+title: Algorithmic Trading
+description: >-
+  A four-day hands-on workshop on algorithmic and AI-driven trading, built
+  around why your backtest is lying to you. Educational use only. ROBT407.
+lang: en
 
 # This is a PROJECT site, served from https://<user>.github.io/ROBT407/ rather
 # than the domain root. Without baseurl, `relative_url` emits root-absolute
 # paths like /handbook.html, which resolve to <user>.github.io/handbook.html --
-# a 404 for every page, stylesheet and diagram on the site.
+# a 404 for every page, stylesheet and diagram.
 #
 # tools/check_links.py asserts this stays in sync with the repository name.
 url: "https://berdakh.github.io"
 baseurl: "/ROBT407"
-theme: jekyll-theme-primer
-show_downloads: false
+
+# just-the-docs gives a sidebar, search and dark mode with nothing vendored.
+# Pinned to the same version as the sister ROBT613 site so the two match.
+remote_theme: just-the-docs/just-the-docs@v0.10.1
 plugins:
-  - jekyll-relative-links
-relative_links:
-  enabled: true
-  collections: false
+  - jekyll-remote-theme
+  - jekyll-seo-tag
+
+color_scheme: dark
+search_enabled: true
+search:
+  heading_level: 3
+  previews: 3
+heading_anchors: true
+
+aux_links:
+  "Notebooks on GitHub":
+    - "https://github.com/berdakh/ROBT407/tree/master/notebooks"
+  "Repository":
+    - "https://github.com/berdakh/ROBT407"
+aux_links_new_tab: true
+
+nav_external_links:
+  - title: Open in Colab
+    url: https://colab.research.google.com/github/berdakh/ROBT407
+
+back_to_top: true
+back_to_top_text: "Back to top"
+
+footer_content: >-
+  ROBT407 workshop materials, MIT licensed.
+  <strong>Educational use only &mdash; not investment advice.</strong>
+  Paper trading only; most retail algorithmic strategies lose money after costs.
+
+callouts:
+  warning:
+    title: Warning
+    color: red
+  note:
+    title: Note
+    color: blue
+  tip:
+    title: Tip
+    color: green
+
 exclude:
   - Gemfile
   - Gemfile.lock
+  - vendor

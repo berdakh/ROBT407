@@ -1,10 +1,9 @@
 ---
+title: Tool ecosystem
 layout: default
-title: The tool ecosystem
+nav_order: 3
+parent: Guides
 ---
-
-<link rel="stylesheet" href="{{ '/assets/style.css' | relative_url }}">
-
 # The tool ecosystem
 
 Every tool below solves a real problem. Every one of them is the wrong choice
@@ -281,5 +280,3 @@ position sizing of notebook 11.
 Do not skip the first row. Every framework in this page makes an execution-timing
 assumption, and you will not know which questions to ask it until you have
 written your own loop and seen what a one-bar shift does to an equity curve.
-
-[← Back to the workshop]({{ '/' | relative_url }})

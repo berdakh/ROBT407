@@ -1,10 +1,9 @@
 ---
-layout: default
 title: Setup
+layout: default
+nav_order: 1
+parent: Guides
 ---
-
-<link rel="stylesheet" href="{{ '/assets/style.css' | relative_url }}">
-
 # Setup
 
 Three ways to run the workshop. All of them work offline once set up, and none
@@ -170,5 +169,3 @@ elapsed. Guard with `if len(view) < self.warmup: return None`.
 
 **`NaiveBacktestWarning`** — `vectorized_backtest` is telling you it is producing
 an unachievable number. That is its job; it is a teaching exhibit, not a tool.
-
-[← Back to the workshop]({{ '/' | relative_url }})

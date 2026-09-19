@@ -1,10 +1,9 @@
 ---
-layout: default
 title: Library reference
+layout: default
+nav_order: 4
+parent: Guides
 ---
-
-<link rel="stylesheet" href="{{ '/assets/style.css' | relative_url }}">
-
 # The `algotrade` library
 
 About 2,000 lines, designed to be read. The notebooks import it rather than
@@ -242,5 +241,3 @@ a 24 bps round trip is `cost_bps=12`.
 
 `compare_shift_effect` puts a number on how much of your "profit" was
 look-ahead.
-
-[← Back to the workshop]({{ '/' | relative_url }})

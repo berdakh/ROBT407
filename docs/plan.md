@@ -1,10 +1,8 @@
 ---
+title: Day plan
 layout: default
-title: Day-by-day plan
+nav_order: 3
 ---
-
-<link rel="stylesheet" href="{{ '/assets/style.css' | relative_url }}">
-
 # Day-by-day plan
 
 Four days, roughly six hours each. Times are a guide; the exercises expand to
@@ -197,5 +195,3 @@ training. Grade accordingly and say so in advance.
 **Timing is tight on Day 3.** If you are running behind, cut notebook 10 to a
 30-minute walkthrough rather than dropping notebook 09 — validation is load-
 bearing and the report card is not.
-
-[← Back to the workshop]({{ '/' | relative_url }})
