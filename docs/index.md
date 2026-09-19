@@ -160,7 +160,7 @@ A normal laptop. No GPU, no paid data subscription, no broker account.
 git clone https://github.com/berdakh/ROBT407.git
 cd ROBT407
 pip install -e .
-pytest                              # 160 tests, no network required
+pytest                              # 174 tests, no network required
 jupyter notebook notebooks/
 ```
 

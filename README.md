@@ -58,7 +58,7 @@ git clone https://github.com/berdakh/ROBT407.git
 cd ROBT407
 pip install -e ".[dev,notebooks]"
 
-pytest                             # 160 tests, no network needed
+pytest                             # 174 tests, no network needed
 python tools/run_notebooks.py      # all 13 notebooks execute
 jupyter notebook notebooks/
 ```
@@ -75,7 +75,7 @@ notebooks/        generated notebooks, with Colab badges
 diagrams/src/     diagram sources — SVG is generated from code
 data/synthetic/   six committed datasets with known ground truth
 docs/             the GitHub Pages site, including the handbook
-tests/            160 tests, no network, no market data feed
+tests/            174 tests, no network, no market data feed
 ```
 
 Notebooks and diagrams are **generated from reviewable sources**. CI checks they

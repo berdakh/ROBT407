@@ -45,7 +45,7 @@ pip install -e ".[dev,notebooks]"
 Verify:
 
 ```bash
-pytest                             # 160 tests, no network required
+pytest                             # 174 tests, no network required
 python tools/run_notebooks.py      # executes all 13 notebooks
 jupyter notebook notebooks/
 ```
@@ -70,7 +70,10 @@ After the initial clone, nothing needs the network:
 - No notebook in the required path makes a network call.
 
 The only script that touches the network is `scripts/fetch_market_data.py`,
-which is optional.
+which is optional. Its parsing and every error path are covered by
+`tests/test_fetch_script.py` against a mocked exchange, so even that runs
+offline — though whether the live endpoint still returns the assumed shape is
+something only a real call can tell you.
 
 ---
 

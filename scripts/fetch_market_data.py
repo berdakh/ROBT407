@@ -47,10 +47,48 @@ INTERVAL_MS = {"1m": 60_000, "5m": 300_000, "15m": 900_000, "1h": 3_600_000,
                "4h": 14_400_000, "1d": 86_400_000}
 
 
+class ExchangeError(RuntimeError):
+    """The exchange answered, but with something other than market data."""
+
+
 def _get(url: str, timeout: int = 30):
     req = urllib.request.Request(url, headers={"User-Agent": "algotrade-workshop/1.0"})
     with urllib.request.urlopen(req, timeout=timeout) as resp:
         return json.loads(resp.read().decode())
+
+
+def _parse_klines(payload, symbol: str) -> "list[dict]":
+    """Turn one kline batch into rows, or explain clearly why it cannot.
+
+    Binance answers an invalid symbol with an error OBJECT rather than a list.
+    Iterating that object yields its dict keys, so the naive version of this
+    function failed with ``invalid literal for int() with base 10: 'c'`` --
+    which tells a student nothing at all about what they got wrong.
+    """
+    if isinstance(payload, dict):
+        message = payload.get("msg") or payload.get("message") or str(payload)
+        raise ExchangeError(
+            f"the exchange rejected the request for {symbol!r}: {message}\n"
+            f"Check the symbol. Binance pairs have no separator and are upper case, "
+            f"e.g. BTCUSDT or ETHUSDT -- not BTC-USD or btc/usdt."
+        )
+    if not isinstance(payload, list):
+        raise ExchangeError(f"expected a list of klines, got {type(payload).__name__}")
+
+    rows = []
+    for k in payload:
+        if not isinstance(k, (list, tuple)) or len(k) < 6:
+            raise ExchangeError(
+                f"malformed kline in the response: {k!r}. The endpoint's shape may "
+                f"have changed; this script expects [open_time, o, h, l, c, v, ...]."
+            )
+        rows.append(
+            {
+                "timestamp": int(k[0]), "open": float(k[1]), "high": float(k[2]),
+                "low": float(k[3]), "close": float(k[4]), "volume": float(k[5]),
+            }
+        )
+    return rows
 
 
 def fetch_binance(symbol: str, interval: str, days: int) -> "list[dict]":
@@ -66,14 +104,20 @@ def fetch_binance(symbol: str, interval: str, days: int) -> "list[dict]":
         batch = _get(url)
         if not batch:
             break
-        for k in batch:
-            rows.append(
-                {
-                    "timestamp": int(k[0]), "open": float(k[1]), "high": float(k[2]),
-                    "low": float(k[3]), "close": float(k[4]), "volume": float(k[5]),
-                }
+
+        rows.extend(_parse_klines(batch, symbol))
+
+        # Guard against a cursor that does not advance. A stale or malformed
+        # response could otherwise spin this loop forever against someone
+        # else's free API, which is a rude way to get yourself rate-limited.
+        next_cursor = int(batch[-1][0]) + step
+        if next_cursor <= cursor:
+            raise ExchangeError(
+                f"the response did not advance past {cursor}; stopping rather than "
+                f"looping. Last kline open time was {batch[-1][0]}."
             )
-        cursor = batch[-1][0] + step
+        cursor = next_cursor
+
         print(f"    fetched {len(rows)} bars...", end="\r", flush=True)
         time.sleep(0.25)          # be a good citizen of someone else's free API
     return rows
@@ -93,9 +137,22 @@ def main() -> int:
     print(f"Fetching {args.days} days of {args.symbol} {args.interval} bars...")
     try:
         rows = fetch_binance(args.symbol, args.interval, args.days)
-    except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError) as exc:
+    except ExchangeError as exc:
+        # The exchange answered; we just cannot use the answer. Usually a typo.
+        print(f"\n{exc}", file=sys.stderr)
+        return 2
+    except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError, OSError) as exc:
+        hint = ""
+        status = getattr(exc, "code", None)
+        if status == 429:
+            hint = "\nThat is a rate limit. Wait a minute and try again.\n"
+        elif status in (401, 403, 451):
+            hint = (
+                "\nThat status usually means the endpoint is geo-blocked or behind a\n"
+                "proxy. Try a different exchange, or skip it -- see below.\n"
+            )
         print(
-            f"\nCould not reach the exchange: {exc}\n"
+            f"\nCould not reach the exchange: {exc}\n{hint}"
             f"\nThis is not fatal. The workshop is designed to run entirely on the\n"
             f"committed synthetic data in data/synthetic/, which is what every\n"
             f"notebook loads by default. Real data is a bonus, not a dependency.",
