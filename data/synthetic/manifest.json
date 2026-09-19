@@ -1,0 +1,100 @@
+{
+  "gbm": {
+    "file": "gbm.csv",
+    "generator": "gbm",
+    "seed": 22,
+    "bars": 8760,
+    "bars_per_year": 8760.0,
+    "start": "2021-01-01 00:00:00+00:00",
+    "end": "2021-12-31 23:00:00+00:00",
+    "ground_truth": {
+      "mu_annual": 0.1,
+      "sigma_annual": 0.6,
+      "autocorrelation": 0.0
+    },
+    "lesson": "i.i.d. returns -- no predictability exists. Any edge found here is overfitting."
+  },
+  "momentum": {
+    "file": "momentum.csv",
+    "generator": "momentum",
+    "seed": 11,
+    "bars": 8760,
+    "bars_per_year": 8760.0,
+    "start": "2021-01-01 00:00:00+00:00",
+    "end": "2021-12-31 23:00:00+00:00",
+    "ground_truth": {
+      "phi": 0.06,
+      "sigma_annual": 0.6,
+      "autocorrelation": 0.06
+    },
+    "lesson": "AR(1) returns with phi=0.06. Trend following should earn a positive edge here."
+  },
+  "mean_reverting": {
+    "file": "mean_reverting.csv",
+    "generator": "mean_reverting",
+    "seed": 13,
+    "bars": 8760,
+    "bars_per_year": 8760.0,
+    "start": "2021-01-01 00:00:00+00:00",
+    "end": "2021-12-31 23:00:00+00:00",
+    "ground_truth": {
+      "kappa": 0.06,
+      "sigma_annual": 0.55,
+      "half_life_bars": 11.552453009332423
+    },
+    "lesson": "Ornstein-Uhlenbeck, half-life 12 bars. A z-score reversion strategy should earn a real edge here; a trend follower should lose. The pull is far stronger than any real market -- it is dialled up so the signal is findable."
+  },
+  "regime_switching": {
+    "file": "regime_switching.csv",
+    "generator": "regime_switching",
+    "seed": 17,
+    "bars": 8760,
+    "bars_per_year": 8760.0,
+    "start": "2021-01-01 00:00:00+00:00",
+    "end": "2021-12-31 23:00:00+00:00",
+    "ground_truth": {
+      "sigma_calm": 0.3,
+      "sigma_turbulent": 1.2,
+      "p_stay": 0.995,
+      "pct_turbulent": 0.5784246575342465
+    },
+    "lesson": "Two volatility regimes. A single Sharpe ratio averages them into a meaningless number."
+  },
+  "pure_noise": {
+    "file": "pure_noise.csv",
+    "generator": "pure_noise",
+    "seed": 19,
+    "bars": 8760,
+    "bars_per_year": 8760.0,
+    "start": "2021-01-01 00:00:00+00:00",
+    "end": "2021-12-31 23:00:00+00:00",
+    "ground_truth": {
+      "mu_annual": 0.0,
+      "sigma_annual": 0.65,
+      "autocorrelation": 0.0
+    },
+    "lesson": "Driftless random walk. Ground truth: NO strategy has an edge. Used for the data-snooping lesson."
+  },
+  "trending_with_crash": {
+    "file": "trending_with_crash.csv",
+    "generator": "trending_with_crash",
+    "seed": 12,
+    "bars": 17520,
+    "bars_per_year": 8760.0,
+    "start": "2021-01-01 00:00:00+00:00",
+    "end": "2022-12-31 23:00:00+00:00",
+    "ground_truth": {
+      "sigma_annual": 0.55,
+      "mu_annual": 1.2,
+      "n_crashes": 4,
+      "crash_starts": [
+        2555,
+        5840,
+        9557,
+        13408
+      ],
+      "max_crash_len_bars": 700
+    },
+    "lesson": "Strong drift with abrupt drawdowns. Sharpe looks fine; max drawdown does not."
+  }
+}

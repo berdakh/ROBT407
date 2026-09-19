@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 556" width="960" height="556" role="img" aria-labelledby="title desc" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif">
+  <title id="title">The order lifecycle</title>
+  <desc id="desc">Six stages between a strategy's decision and a settled position: decide, submit, queue, match, fill, settle. Each stage costs time or money. The sum of the costs is why a zero-cost backtest is fiction.</desc>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --fg: #1f2328;
+      --muted: #57606a;
+      --line: #d0d7de;
+      --surface: #f6f8fa;
+      --accent: #0969da;
+      --accent-bg: #ddf4ff;
+      --good: #1a7f37;
+      --good-bg: #dafbe1;
+      --bad: #cf222e;
+      --bad-bg: #ffebe9;
+      --warn: #9a6700;
+      --warn-bg: #fff8c5;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0d1117;
+        --fg: #e6edf3;
+        --muted: #9198a1;
+        --line: #30363d;
+        --surface: #161b22;
+        --accent: #4493f8;
+        --accent-bg: #0c2d6b;
+        --good: #3fb950;
+        --good-bg: #0f3d1c;
+        --bad: #f85149;
+        --bad-bg: #4a1418;
+        --warn: #d29922;
+        --warn-bg: #3d2c00;
+      }
+    }
+    .bg { fill: var(--bg); }
+    text { fill: var(--fg); }
+    .muted { fill: var(--muted); }
+    .mono { font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; }
+    .card { fill: var(--surface); stroke: var(--line); }
+    .edge { stroke: var(--line); fill: none; }
+  </style>
+  <rect class="bg" width="960" height="556"/>
+  <defs>
+    <marker id="arrow-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--muted)"/>
+    </marker>
+  </defs>
+  <text x="480.0" y="34" font-size="22" font-weight="650" text-anchor="middle">The order lifecycle</text>
+  <text x="480.0" y="57" font-size="13" font-weight="400" text-anchor="middle" class="muted">Everything between “buy” and “bought”, and what each step costs you</text>
+  <rect x="46" y="108" width="132" height="84" rx="8" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.8"/>
+  <text x="112.0" y="132" font-size="13.5" font-weight="700" text-anchor="middle" fill="var(--accent)">DECIDE</text>
+  <text x="112.0" y="152" font-size="11" font-weight="400" text-anchor="middle">strategy returns</text>
+  <text x="112.0" y="166" font-size="11" font-weight="400" text-anchor="middle">a target weight</text>
+  <text x="112.0" y="184" font-size="10" font-weight="400" text-anchor="middle" class="muted mono">bar i close</text>
+  <line x1="181" y1="150.0" x2="196" y2="150.0" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow-muted)"/>
+  <rect x="200" y="108" width="132" height="84" rx="8" fill="var(--surface)" stroke="var(--line)" stroke-width="1.8"/>
+  <text x="266.0" y="132" font-size="13.5" font-weight="700" text-anchor="middle" fill="var(--accent)">SUBMIT</text>
+  <text x="266.0" y="152" font-size="11" font-weight="400" text-anchor="middle">order enters</text>
+  <text x="266.0" y="166" font-size="11" font-weight="400" text-anchor="middle">the engine</text>
+  <text x="266.0" y="184" font-size="10" font-weight="400" text-anchor="middle" class="muted mono">queued for i+1</text>
+  <line x1="335" y1="150.0" x2="350" y2="150.0" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow-muted)"/>
+  <line x1="266.0" y1="196" x2="266.0" y2="240" stroke="var(--bad)" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="3 3"/>
+  <rect x="196" y="246" width="140" height="66" rx="8" fill="var(--bad-bg)" stroke="var(--bad)" stroke-width="1.3"/>
+  <text x="266.0" y="266" font-size="12" font-weight="650" text-anchor="middle" fill="var(--bad)">latency</text>
+  <text x="266.0" y="282" font-size="10" font-weight="400" text-anchor="middle">you are slower than</text>
+  <text x="266.0" y="295" font-size="10" font-weight="400" text-anchor="middle">someone else</text>
+  <rect x="354" y="108" width="132" height="84" rx="8" fill="var(--surface)" stroke="var(--line)" stroke-width="1.8"/>
+  <text x="420.0" y="132" font-size="13.5" font-weight="700" text-anchor="middle" fill="var(--accent)">QUEUE</text>
+  <text x="420.0" y="152" font-size="11" font-weight="400" text-anchor="middle">resting in the</text>
+  <text x="420.0" y="166" font-size="11" font-weight="400" text-anchor="middle">order book</text>
+  <text x="420.0" y="184" font-size="10" font-weight="400" text-anchor="middle" class="muted mono">market or limit</text>
+  <line x1="489" y1="150.0" x2="504" y2="150.0" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow-muted)"/>
+  <line x1="420.0" y1="196" x2="420.0" y2="240" stroke="var(--bad)" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="3 3"/>
+  <rect x="350" y="246" width="140" height="66" rx="8" fill="var(--bad-bg)" stroke="var(--bad)" stroke-width="1.3"/>
+  <text x="420.0" y="266" font-size="12" font-weight="650" text-anchor="middle" fill="var(--bad)">queue position</text>
+  <text x="420.0" y="282" font-size="10" font-weight="400" text-anchor="middle">limit orders may</text>
+  <text x="420.0" y="295" font-size="10" font-weight="400" text-anchor="middle">never fill</text>
+  <rect x="508" y="108" width="132" height="84" rx="8" fill="var(--surface)" stroke="var(--line)" stroke-width="1.8"/>
+  <text x="574.0" y="132" font-size="13.5" font-weight="700" text-anchor="middle" fill="var(--accent)">MATCH</text>
+  <text x="574.0" y="152" font-size="11" font-weight="400" text-anchor="middle">crossed against</text>
+  <text x="574.0" y="166" font-size="11" font-weight="400" text-anchor="middle">the other side</text>
+  <text x="574.0" y="184" font-size="10" font-weight="400" text-anchor="middle" class="muted mono">bar i+1 open</text>
+  <line x1="643" y1="150.0" x2="658" y2="150.0" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow-muted)"/>
+  <line x1="574.0" y1="196" x2="574.0" y2="240" stroke="var(--bad)" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="3 3"/>
+  <rect x="504" y="246" width="140" height="66" rx="8" fill="var(--bad-bg)" stroke="var(--bad)" stroke-width="1.3"/>
+  <text x="574.0" y="266" font-size="12" font-weight="650" text-anchor="middle" fill="var(--bad)">spread</text>
+  <text x="574.0" y="282" font-size="10" font-weight="400" text-anchor="middle">you buy at the ask,</text>
+  <text x="574.0" y="295" font-size="10" font-weight="400" text-anchor="middle">sell at the bid</text>
+  <rect x="662" y="108" width="132" height="84" rx="8" fill="var(--surface)" stroke="var(--line)" stroke-width="1.8"/>
+  <text x="728.0" y="132" font-size="13.5" font-weight="700" text-anchor="middle" fill="var(--accent)">FILL</text>
+  <text x="728.0" y="152" font-size="11" font-weight="400" text-anchor="middle">you own it,</text>
+  <text x="728.0" y="166" font-size="11" font-weight="400" text-anchor="middle">maybe partially</text>
+  <text x="728.0" y="184" font-size="10" font-weight="400" text-anchor="middle" class="muted mono">price != mid</text>
+  <line x1="797" y1="150.0" x2="812" y2="150.0" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow-muted)"/>
+  <line x1="728.0" y1="196" x2="728.0" y2="240" stroke="var(--bad)" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="3 3"/>
+  <rect x="658" y="246" width="140" height="66" rx="8" fill="var(--bad-bg)" stroke="var(--bad)" stroke-width="1.3"/>
+  <text x="728.0" y="266" font-size="12" font-weight="650" text-anchor="middle" fill="var(--bad)">impact</text>
+  <text x="728.0" y="282" font-size="10" font-weight="400" text-anchor="middle">size moves the price</text>
+  <text x="728.0" y="295" font-size="10" font-weight="400" text-anchor="middle">against you</text>
+  <rect x="816" y="108" width="132" height="84" rx="8" fill="var(--surface)" stroke="var(--line)" stroke-width="1.8"/>
+  <text x="882.0" y="132" font-size="13.5" font-weight="700" text-anchor="middle" fill="var(--accent)">SETTLE</text>
+  <text x="882.0" y="152" font-size="11" font-weight="400" text-anchor="middle">cash and position</text>
+  <text x="882.0" y="166" font-size="11" font-weight="400" text-anchor="middle">updated</text>
+  <text x="882.0" y="184" font-size="10" font-weight="400" text-anchor="middle" class="muted mono">fee charged</text>
+  <line x1="882.0" y1="196" x2="882.0" y2="240" stroke="var(--bad)" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="3 3"/>
+  <rect x="812" y="246" width="140" height="66" rx="8" fill="var(--bad-bg)" stroke="var(--bad)" stroke-width="1.3"/>
+  <text x="882.0" y="266" font-size="12" font-weight="650" text-anchor="middle" fill="var(--bad)">commission</text>
+  <text x="882.0" y="282" font-size="10" font-weight="400" text-anchor="middle">charged on notional,</text>
+  <text x="882.0" y="295" font-size="10" font-weight="400" text-anchor="middle">every single time</text>
+  <rect x="46" y="330" width="868" height="118" rx="8" fill="var(--surface)" stroke="var(--line)" stroke-width="1.5"/>
+  <text x="70" y="358" font-size="14" font-weight="650" text-anchor="start">Adding it up: a round trip for a small retail taker on a liquid crypto pair</text>
+  <text x="70" y="382" font-size="11.5" font-weight="400" text-anchor="start" class="muted">exchange fee</text>
+  <text x="230" y="382" font-size="11.5" font-weight="600" text-anchor="start" class="mono">10.0 bps</text>
+  <text x="300" y="382" font-size="11" font-weight="400" text-anchor="start" class="muted">each way</text>
+  <text x="70" y="398" font-size="11.5" font-weight="400" text-anchor="start" class="muted">half the spread</text>
+  <text x="230" y="398" font-size="11.5" font-weight="600" text-anchor="start" class="mono">1.0 bps</text>
+  <text x="300" y="398" font-size="11" font-weight="400" text-anchor="start" class="muted">each way</text>
+  <text x="70" y="414" font-size="11.5" font-weight="400" text-anchor="start" class="muted">latency drift</text>
+  <text x="230" y="414" font-size="11.5" font-weight="600" text-anchor="start" class="mono">1.0 bps</text>
+  <text x="300" y="414" font-size="11" font-weight="400" text-anchor="start" class="muted">each way</text>
+  <text x="70" y="430" font-size="11.5" font-weight="400" text-anchor="start" class="muted">market impact</text>
+  <text x="230" y="430" font-size="11.5" font-weight="600" text-anchor="start" class="mono">~0 bps</text>
+  <text x="300" y="430" font-size="11" font-weight="400" text-anchor="start" class="muted">while your size is tiny</text>
+  <line x1="560" y1="370" x2="560" y2="436" stroke="var(--line)" stroke-width="1.5" stroke-linecap="round"/>
+  <text x="590" y="392" font-size="17" font-weight="700" text-anchor="start" class="mono" fill="var(--bad)">round trip = 24 bps</text>
+  <text x="590" y="414" font-size="12" font-weight="400" text-anchor="start" class="muted">Trade 200x a year and that is 24% of capital</text>
+  <text x="590" y="431" font-size="12" font-weight="400" text-anchor="start" class="muted">paid in costs before you earn anything.</text>
+  <rect x="46" y="470" width="868" height="62" rx="8" fill="var(--warn-bg)" stroke="var(--warn)" stroke-width="1.5"/>
+  <text x="70" y="496" font-size="13" font-weight="650" text-anchor="start" fill="var(--warn)">The question this diagram exists to make unavoidable</text>
+  <text x="70" y="516" font-size="12" font-weight="400" text-anchor="start">Is your average winning trade bigger than 24 basis points? If not, no amount of parameter tuning will save the strategy.</text>
+</svg>

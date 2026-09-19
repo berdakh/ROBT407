@@ -1,0 +1,476 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 592" width="960" height="592" role="img" aria-labelledby="title desc" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif">
+  <title id="title">Walk-forward validation versus shuffled cross-validation</title>
+  <desc id="desc">Shuffled K-fold places training samples after the test fold in time, so the model is fitted on the future. Walk-forward keeps every training sample before its test window, with a purge gap for the label horizon and an embargo for serial correlation.</desc>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --fg: #1f2328;
+      --muted: #57606a;
+      --line: #d0d7de;
+      --surface: #f6f8fa;
+      --accent: #0969da;
+      --accent-bg: #ddf4ff;
+      --good: #1a7f37;
+      --good-bg: #dafbe1;
+      --bad: #cf222e;
+      --bad-bg: #ffebe9;
+      --warn: #9a6700;
+      --warn-bg: #fff8c5;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0d1117;
+        --fg: #e6edf3;
+        --muted: #9198a1;
+        --line: #30363d;
+        --surface: #161b22;
+        --accent: #4493f8;
+        --accent-bg: #0c2d6b;
+        --good: #3fb950;
+        --good-bg: #0f3d1c;
+        --bad: #f85149;
+        --bad-bg: #4a1418;
+        --warn: #d29922;
+        --warn-bg: #3d2c00;
+      }
+    }
+    .bg { fill: var(--bg); }
+    text { fill: var(--fg); }
+    .muted { fill: var(--muted); }
+    .mono { font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; }
+    .card { fill: var(--surface); stroke: var(--line); }
+    .edge { stroke: var(--line); fill: none; }
+  </style>
+  <rect class="bg" width="960" height="592"/>
+  <text x="480.0" y="34" font-size="22" font-weight="650" text-anchor="middle">Walk-forward vs shuffled cross-validation</text>
+  <text x="480.0" y="57" font-size="13" font-weight="400" text-anchor="middle" class="muted">Same data, same model, opposite meaning</text>
+  <rect x="20" y="68" width="900" height="176" rx="8" fill="var(--bad-bg)" stroke="var(--bad)" stroke-width="1.5" opacity="0.35"/>
+  <text x="32" y="88" font-size="14" font-weight="650" text-anchor="start" fill="var(--bad)">WRONG   sklearn train_test_split(shuffle=True) / KFold</text>
+  <text x="138" y="121" font-size="12.5" font-weight="550" text-anchor="end">fold 1</text>
+  <rect x="152.0" y="110" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="165.2" y="110" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="178.4" y="110" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="191.6" y="110" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="204.8" y="110" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="218.0" y="110" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="231.2" y="110" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="244.39999999999998" y="110" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="257.6" y="110" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="270.8" y="110" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="284.0" y="110" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="297.2" y="110" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="310.4" y="110" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="323.6" y="110" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="336.79999999999995" y="110" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="350.0" y="110" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="363.2" y="110" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="376.4" y="110" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="389.6" y="110" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="402.79999999999995" y="110" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="416.0" y="110" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="429.2" y="110" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="442.4" y="110" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="455.59999999999997" y="110" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="468.79999999999995" y="110" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="482.0" y="110" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="495.2" y="110" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="508.4" y="110" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="521.5999999999999" y="110" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="534.8" y="110" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="548.0" y="110" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="561.2" y="110" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="574.4" y="110" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="587.5999999999999" y="110" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="600.8" y="110" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="614.0" y="110" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="627.2" y="110" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="640.4" y="110" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="653.5999999999999" y="110" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="666.8" y="110" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="680.0" y="110" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="693.1999999999999" y="110" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="706.4" y="110" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="719.6" y="110" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="732.8" y="110" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="746.0" y="110" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="759.1999999999999" y="110" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="772.4" y="110" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="785.5999999999999" y="110" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="798.8" y="110" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="812.0" y="110" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="825.1999999999999" y="110" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="838.4" y="110" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="851.5999999999999" y="110" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="864.8" y="110" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="878.0" y="110" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="891.1999999999999" y="110" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="904.4" y="110" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <text x="138" y="151" font-size="12.5" font-weight="550" text-anchor="end">fold 2</text>
+  <rect x="152.0" y="140" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="165.2" y="140" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="178.4" y="140" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="191.6" y="140" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="204.8" y="140" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="218.0" y="140" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="231.2" y="140" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="244.39999999999998" y="140" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="257.6" y="140" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="270.8" y="140" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="284.0" y="140" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="297.2" y="140" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="310.4" y="140" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="323.6" y="140" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="336.79999999999995" y="140" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="350.0" y="140" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="363.2" y="140" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="376.4" y="140" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="389.6" y="140" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="402.79999999999995" y="140" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="416.0" y="140" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="429.2" y="140" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="442.4" y="140" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="455.59999999999997" y="140" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="468.79999999999995" y="140" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="482.0" y="140" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="495.2" y="140" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="508.4" y="140" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="521.5999999999999" y="140" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="534.8" y="140" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="548.0" y="140" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="561.2" y="140" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="574.4" y="140" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="587.5999999999999" y="140" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="600.8" y="140" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="614.0" y="140" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="627.2" y="140" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="640.4" y="140" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="653.5999999999999" y="140" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="666.8" y="140" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="680.0" y="140" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="693.1999999999999" y="140" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="706.4" y="140" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="719.6" y="140" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="732.8" y="140" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="746.0" y="140" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="759.1999999999999" y="140" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="772.4" y="140" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="785.5999999999999" y="140" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="798.8" y="140" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="812.0" y="140" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="825.1999999999999" y="140" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="838.4" y="140" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="851.5999999999999" y="140" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="864.8" y="140" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="878.0" y="140" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="891.1999999999999" y="140" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="904.4" y="140" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <text x="138" y="181" font-size="12.5" font-weight="550" text-anchor="end">fold 3</text>
+  <rect x="152.0" y="170" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="165.2" y="170" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="178.4" y="170" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="191.6" y="170" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="204.8" y="170" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="218.0" y="170" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="231.2" y="170" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="244.39999999999998" y="170" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="257.6" y="170" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="270.8" y="170" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="284.0" y="170" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="297.2" y="170" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="310.4" y="170" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="323.6" y="170" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="336.79999999999995" y="170" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="350.0" y="170" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="363.2" y="170" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="376.4" y="170" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="389.6" y="170" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="402.79999999999995" y="170" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="416.0" y="170" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="429.2" y="170" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="442.4" y="170" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="455.59999999999997" y="170" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="468.79999999999995" y="170" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="482.0" y="170" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="495.2" y="170" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="508.4" y="170" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="521.5999999999999" y="170" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="534.8" y="170" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="548.0" y="170" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="561.2" y="170" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="574.4" y="170" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="587.5999999999999" y="170" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="600.8" y="170" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="614.0" y="170" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="627.2" y="170" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="640.4" y="170" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="653.5999999999999" y="170" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="666.8" y="170" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="680.0" y="170" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="693.1999999999999" y="170" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="706.4" y="170" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="719.6" y="170" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="732.8" y="170" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="746.0" y="170" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="759.1999999999999" y="170" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="772.4" y="170" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="785.5999999999999" y="170" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="798.8" y="170" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="812.0" y="170" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="825.1999999999999" y="170" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="838.4" y="170" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="851.5999999999999" y="170" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="864.8" y="170" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="878.0" y="170" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="891.1999999999999" y="170" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="904.4" y="170" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <text x="152" y="216" font-size="11.5" font-weight="400" text-anchor="start" class="muted">Training samples sit on BOTH sides of every test sample. The model interpolates between known points</text>
+  <text x="152" y="232" font-size="11.5" font-weight="400" text-anchor="start" class="muted">instead of extrapolating into an unknown future. Accuracy goes up. Profit does not.</text>
+  <rect x="20" y="292" width="900" height="232" rx="8" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1.5" opacity="0.3"/>
+  <text x="32" y="312" font-size="14" font-weight="650" text-anchor="start" fill="var(--good)">RIGHT   walk_forward_splits(train_size, test_size, purge, embargo)</text>
+  <text x="138" y="345" font-size="12.5" font-weight="550" text-anchor="end">fold 1</text>
+  <rect x="152.0" y="334" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="165.2" y="334" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="178.4" y="334" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="191.6" y="334" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="204.8" y="334" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="218.0" y="334" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="231.2" y="334" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="244.39999999999998" y="334" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="257.6" y="334" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="270.8" y="334" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="284.0" y="334" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="297.2" y="334" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="310.4" y="334" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="323.6" y="334" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="336.79999999999995" y="334" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="350.0" y="334" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="363.2" y="334" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="376.4" y="334" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="389.6" y="334" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="402.79999999999995" y="334" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="416.0" y="334" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="429.2" y="334" width="11.6" height="16" rx="2" fill="var(--warn-bg)" stroke="var(--warn)" stroke-width="1"/>
+  <rect x="442.4" y="334" width="11.6" height="16" rx="2" fill="var(--warn-bg)" stroke="var(--warn)" stroke-width="1"/>
+  <rect x="455.59999999999997" y="334" width="11.6" height="16" rx="2" fill="var(--warn-bg)" stroke="var(--warn)" stroke-width="1"/>
+  <rect x="468.79999999999995" y="334" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="482.0" y="334" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="495.2" y="334" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="508.4" y="334" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="521.5999999999999" y="334" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="534.8" y="334" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="548.0" y="334" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="561.2" y="334" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="574.4" y="334" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="587.5999999999999" y="334" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="600.8" y="334" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="614.0" y="334" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="627.2" y="334" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="640.4" y="334" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="653.5999999999999" y="334" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="666.8" y="334" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="680.0" y="334" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="693.1999999999999" y="334" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="706.4" y="334" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="719.6" y="334" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="732.8" y="334" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="746.0" y="334" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="759.1999999999999" y="334" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="772.4" y="334" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="785.5999999999999" y="334" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="798.8" y="334" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="812.0" y="334" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="825.1999999999999" y="334" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="838.4" y="334" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="851.5999999999999" y="334" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="864.8" y="334" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="878.0" y="334" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="891.1999999999999" y="334" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="904.4" y="334" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <text x="138" y="375" font-size="12.5" font-weight="550" text-anchor="end">fold 2</text>
+  <rect x="152.0" y="364" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="165.2" y="364" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="178.4" y="364" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="191.6" y="364" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="204.8" y="364" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="218.0" y="364" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="231.2" y="364" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="244.39999999999998" y="364" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="257.6" y="364" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="270.8" y="364" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="284.0" y="364" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="297.2" y="364" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="310.4" y="364" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="323.6" y="364" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="336.79999999999995" y="364" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="350.0" y="364" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="363.2" y="364" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="376.4" y="364" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="389.6" y="364" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="402.79999999999995" y="364" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="416.0" y="364" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="429.2" y="364" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="442.4" y="364" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="455.59999999999997" y="364" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="468.79999999999995" y="364" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="482.0" y="364" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="495.2" y="364" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="508.4" y="364" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="521.5999999999999" y="364" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="534.8" y="364" width="11.6" height="16" rx="2" fill="var(--warn-bg)" stroke="var(--warn)" stroke-width="1"/>
+  <rect x="548.0" y="364" width="11.6" height="16" rx="2" fill="var(--warn-bg)" stroke="var(--warn)" stroke-width="1"/>
+  <rect x="561.2" y="364" width="11.6" height="16" rx="2" fill="var(--warn-bg)" stroke="var(--warn)" stroke-width="1"/>
+  <rect x="574.4" y="364" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="587.5999999999999" y="364" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="600.8" y="364" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="614.0" y="364" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="627.2" y="364" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="640.4" y="364" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="653.5999999999999" y="364" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="666.8" y="364" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="680.0" y="364" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="693.1999999999999" y="364" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="706.4" y="364" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="719.6" y="364" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="732.8" y="364" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="746.0" y="364" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="759.1999999999999" y="364" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="772.4" y="364" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="785.5999999999999" y="364" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="798.8" y="364" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="812.0" y="364" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="825.1999999999999" y="364" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="838.4" y="364" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="851.5999999999999" y="364" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="864.8" y="364" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="878.0" y="364" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="891.1999999999999" y="364" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="904.4" y="364" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <text x="138" y="405" font-size="12.5" font-weight="550" text-anchor="end">fold 3</text>
+  <rect x="152.0" y="394" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="165.2" y="394" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="178.4" y="394" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="191.6" y="394" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="204.8" y="394" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="218.0" y="394" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="231.2" y="394" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="244.39999999999998" y="394" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="257.6" y="394" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="270.8" y="394" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="284.0" y="394" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="297.2" y="394" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="310.4" y="394" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="323.6" y="394" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="336.79999999999995" y="394" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="350.0" y="394" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="363.2" y="394" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="376.4" y="394" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="389.6" y="394" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="402.79999999999995" y="394" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="416.0" y="394" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="429.2" y="394" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="442.4" y="394" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="455.59999999999997" y="394" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="468.79999999999995" y="394" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="482.0" y="394" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="495.2" y="394" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="508.4" y="394" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="521.5999999999999" y="394" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="534.8" y="394" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="548.0" y="394" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="561.2" y="394" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="574.4" y="394" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="587.5999999999999" y="394" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="600.8" y="394" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="614.0" y="394" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="627.2" y="394" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="640.4" y="394" width="11.6" height="16" rx="2" fill="var(--warn-bg)" stroke="var(--warn)" stroke-width="1"/>
+  <rect x="653.5999999999999" y="394" width="11.6" height="16" rx="2" fill="var(--warn-bg)" stroke="var(--warn)" stroke-width="1"/>
+  <rect x="666.8" y="394" width="11.6" height="16" rx="2" fill="var(--warn-bg)" stroke="var(--warn)" stroke-width="1"/>
+  <rect x="680.0" y="394" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="693.1999999999999" y="394" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="706.4" y="394" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="719.6" y="394" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="732.8" y="394" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="746.0" y="394" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="759.1999999999999" y="394" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="772.4" y="394" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="785.5999999999999" y="394" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="798.8" y="394" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="812.0" y="394" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="825.1999999999999" y="394" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="838.4" y="394" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="851.5999999999999" y="394" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="864.8" y="394" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="878.0" y="394" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="891.1999999999999" y="394" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="904.4" y="394" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <text x="138" y="435" font-size="12.5" font-weight="550" text-anchor="end">fold 4</text>
+  <rect x="152.0" y="424" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="165.2" y="424" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="178.4" y="424" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="191.6" y="424" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="204.8" y="424" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="218.0" y="424" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="231.2" y="424" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="244.39999999999998" y="424" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="257.6" y="424" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="270.8" y="424" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="284.0" y="424" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="297.2" y="424" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="310.4" y="424" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="323.6" y="424" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="336.79999999999995" y="424" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="350.0" y="424" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="363.2" y="424" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="376.4" y="424" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="389.6" y="424" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="402.79999999999995" y="424" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="416.0" y="424" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="429.2" y="424" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="442.4" y="424" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="455.59999999999997" y="424" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="468.79999999999995" y="424" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="482.0" y="424" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="495.2" y="424" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="508.4" y="424" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="521.5999999999999" y="424" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="534.8" y="424" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="548.0" y="424" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="561.2" y="424" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="574.4" y="424" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="587.5999999999999" y="424" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="600.8" y="424" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="614.0" y="424" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="627.2" y="424" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="640.4" y="424" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="653.5999999999999" y="424" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="666.8" y="424" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="680.0" y="424" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="693.1999999999999" y="424" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="706.4" y="424" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="719.6" y="424" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="732.8" y="424" width="11.6" height="16" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <rect x="746.0" y="424" width="11.6" height="16" rx="2" fill="var(--warn-bg)" stroke="var(--warn)" stroke-width="1"/>
+  <rect x="759.1999999999999" y="424" width="11.6" height="16" rx="2" fill="var(--warn-bg)" stroke="var(--warn)" stroke-width="1"/>
+  <rect x="772.4" y="424" width="11.6" height="16" rx="2" fill="var(--warn-bg)" stroke="var(--warn)" stroke-width="1"/>
+  <rect x="785.5999999999999" y="424" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="798.8" y="424" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="812.0" y="424" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="825.1999999999999" y="424" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="838.4" y="424" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="851.5999999999999" y="424" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="864.8" y="424" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="878.0" y="424" width="11.6" height="16" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <rect x="891.1999999999999" y="424" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="904.4" y="424" width="11.6" height="16" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <rect x="152" y="466" width="13" height="13" rx="2" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+  <text x="172" y="477" font-size="11.5" font-weight="400" text-anchor="start" class="muted">train: strictly before the test window</text>
+  <rect x="502" y="466" width="13" height="13" rx="2" fill="var(--warn-bg)" stroke="var(--warn)" stroke-width="1"/>
+  <text x="522" y="477" font-size="11.5" font-weight="400" text-anchor="start" class="muted">purge: dropped, its labels overlap the test period</text>
+  <rect x="152" y="486" width="13" height="13" rx="2" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1"/>
+  <text x="172" y="497" font-size="11.5" font-weight="400" text-anchor="start" class="muted">test: genuinely unseen</text>
+  <rect x="502" y="486" width="13" height="13" rx="2" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+  <text x="522" y="497" font-size="11.5" font-weight="400" text-anchor="start" class="muted">not used in this fold</text>
+  <text x="152" y="534" font-size="12" font-weight="550" text-anchor="start">Stitching the test windows together gives one continuous out-of-sample equity curve.</text>
+  <text x="152" y="552" font-size="12" font-weight="400" text-anchor="start" class="muted">That curve is the only performance number in this workshop that counts as evidence.</text>
+</svg>

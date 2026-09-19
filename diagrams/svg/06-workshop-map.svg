@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 524" width="960" height="524" role="img" aria-labelledby="title desc" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif">
+  <title id="title">The four-day arc</title>
+  <desc id="desc">Day 1 builds a naive strategy that looks spectacular. Day 2 removes the look-ahead bias and adds realistic costs, and the result collapses from plus 46,986 percent to minus 71 percent. Days 3 and 4 rebuild honestly with machine learning, walk-forward validation, risk sizing and paper trading.</desc>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --fg: #1f2328;
+      --muted: #57606a;
+      --line: #d0d7de;
+      --surface: #f6f8fa;
+      --accent: #0969da;
+      --accent-bg: #ddf4ff;
+      --good: #1a7f37;
+      --good-bg: #dafbe1;
+      --bad: #cf222e;
+      --bad-bg: #ffebe9;
+      --warn: #9a6700;
+      --warn-bg: #fff8c5;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0d1117;
+        --fg: #e6edf3;
+        --muted: #9198a1;
+        --line: #30363d;
+        --surface: #161b22;
+        --accent: #4493f8;
+        --accent-bg: #0c2d6b;
+        --good: #3fb950;
+        --good-bg: #0f3d1c;
+        --bad: #f85149;
+        --bad-bg: #4a1418;
+        --warn: #d29922;
+        --warn-bg: #3d2c00;
+      }
+    }
+    .bg { fill: var(--bg); }
+    text { fill: var(--fg); }
+    .muted { fill: var(--muted); }
+    .mono { font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; }
+    .card { fill: var(--surface); stroke: var(--line); }
+    .edge { stroke: var(--line); fill: none; }
+  </style>
+  <rect class="bg" width="960" height="524"/>
+  <defs>
+    <marker id="arrow-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--muted)"/>
+    </marker>
+  </defs>
+  <text x="480.0" y="34" font-size="22" font-weight="650" text-anchor="middle">The four-day arc</text>
+  <text x="480.0" y="57" font-size="13" font-weight="400" text-anchor="middle" class="muted">The collapse on Day 2 is the lesson, not an accident</text>
+  <rect x="46" y="90" width="208" height="136" rx="8" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.8"/>
+  <text x="64" y="118" font-size="12" font-weight="700" text-anchor="start" class="mono" fill="var(--accent)">DAY 1</text>
+  <text x="64" y="140" font-size="14" font-weight="620" text-anchor="start">Data &amp; a first strategy</text>
+  <text x="64" y="164" font-size="11.5" font-weight="400" text-anchor="start" class="muted">• market data, gaps, returns</text>
+  <text x="64" y="182" font-size="11.5" font-weight="400" text-anchor="start" class="muted">• the naive backtest</text>
+  <text x="64" y="200" font-size="11.5" font-weight="400" text-anchor="start" class="muted">• a grid search over 22 variants</text>
+  <line x1="257" y1="158.0" x2="272" y2="158.0" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow-muted)"/>
+  <rect x="276" y="90" width="208" height="136" rx="8" fill="var(--surface)" stroke="var(--bad)" stroke-width="1.8"/>
+  <text x="294" y="118" font-size="12" font-weight="700" text-anchor="start" class="mono" fill="var(--bad)">DAY 2</text>
+  <text x="294" y="140" font-size="14" font-weight="620" text-anchor="start">Why it was a lie</text>
+  <text x="294" y="164" font-size="11.5" font-weight="400" text-anchor="start" class="muted">• the event-driven engine</text>
+  <text x="294" y="182" font-size="11.5" font-weight="400" text-anchor="start" class="muted">• costs, spread, slippage</text>
+  <text x="294" y="200" font-size="11.5" font-weight="400" text-anchor="start" class="muted">• the bias catalogue</text>
+  <line x1="487" y1="158.0" x2="502" y2="158.0" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow-muted)"/>
+  <rect x="506" y="90" width="208" height="136" rx="8" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.8"/>
+  <text x="524" y="118" font-size="12" font-weight="700" text-anchor="start" class="mono" fill="var(--accent)">DAY 3</text>
+  <text x="524" y="140" font-size="14" font-weight="620" text-anchor="start">ML, done correctly</text>
+  <text x="524" y="164" font-size="11.5" font-weight="400" text-anchor="start" class="muted">• causal features, honest labels</text>
+  <text x="524" y="182" font-size="11.5" font-weight="400" text-anchor="start" class="muted">• walk-forward validation</text>
+  <text x="524" y="200" font-size="11.5" font-weight="400" text-anchor="start" class="muted">• accuracy is not profit</text>
+  <line x1="717" y1="158.0" x2="732" y2="158.0" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow-muted)"/>
+  <rect x="736" y="90" width="208" height="136" rx="8" fill="var(--surface)" stroke="var(--good)" stroke-width="1.8"/>
+  <text x="754" y="118" font-size="12" font-weight="700" text-anchor="start" class="mono" fill="var(--good)">DAY 4</text>
+  <text x="754" y="140" font-size="14" font-weight="620" text-anchor="start">Risk &amp; shipping</text>
+  <text x="754" y="164" font-size="11.5" font-weight="400" text-anchor="start" class="muted">• volatility targeting</text>
+  <text x="754" y="182" font-size="11.5" font-weight="400" text-anchor="start" class="muted">• drawdown limits</text>
+  <text x="754" y="200" font-size="11.5" font-weight="400" text-anchor="start" class="muted">• paper trading, capstone</text>
+  <text x="46" y="268" font-size="14" font-weight="650" text-anchor="start">THE SPINE — one strategy, measured four ways</text>
+  <text x="46" y="288" font-size="11.5" font-weight="400" text-anchor="start" class="muted mono">SMA 3/24 on trending_with_crash.csv, the best of 22 grid variants</text>
+  <rect x="46.0" y="308" width="205.0" height="96" rx="8" fill="var(--bad-bg)" stroke="var(--bad)" stroke-width="1.6"/>
+  <text x="148.5" y="348" font-size="25" font-weight="700" text-anchor="middle" class="mono" fill="var(--bad)">+46,986%</text>
+  <text x="148.5" y="370" font-size="11.5" font-weight="400" text-anchor="middle">no shift, no costs</text>
+  <text x="148.5" y="388" font-size="10.5" font-weight="400" text-anchor="middle" class="muted">the Day 1 result</text>
+  <line x1="253.0" y1="356" x2="264.0" y2="356" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow-muted)"/>
+  <rect x="267.0" y="308" width="205.0" height="96" rx="8" fill="var(--warn-bg)" stroke="var(--warn)" stroke-width="1.6"/>
+  <text x="369.5" y="348" font-size="25" font-weight="700" text-anchor="middle" class="mono" fill="var(--warn)">+406%</text>
+  <text x="369.5" y="370" font-size="11.5" font-weight="400" text-anchor="middle">indexing corrected</text>
+  <text x="369.5" y="388" font-size="10.5" font-weight="400" text-anchor="middle" class="muted">look-ahead removed</text>
+  <line x1="474.0" y1="356" x2="485.0" y2="356" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow-muted)"/>
+  <rect x="488.0" y="308" width="205.0" height="96" rx="8" fill="var(--bad-bg)" stroke="var(--bad)" stroke-width="1.6"/>
+  <text x="590.5" y="348" font-size="25" font-weight="700" text-anchor="middle" class="mono" fill="var(--bad)">−70.7%</text>
+  <text x="590.5" y="370" font-size="11.5" font-weight="400" text-anchor="middle">+ 24 bps round trip</text>
+  <text x="590.5" y="388" font-size="10.5" font-weight="400" text-anchor="middle" class="muted">costs added</text>
+  <line x1="695.0" y1="356" x2="706.0" y2="356" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow-muted)"/>
+  <rect x="709.0" y="308" width="205.0" height="96" rx="8" fill="var(--good-bg)" stroke="var(--good)" stroke-width="1.6"/>
+  <text x="811.5" y="348" font-size="25" font-weight="700" text-anchor="middle" class="mono" fill="var(--good)">+582%</text>
+  <text x="811.5" y="370" font-size="11.5" font-weight="400" text-anchor="middle">buy &amp; hold</text>
+  <text x="811.5" y="388" font-size="10.5" font-weight="400" text-anchor="middle" class="muted">doing nothing beat it</text>
+  <rect x="46" y="426" width="868" height="74" rx="8" fill="var(--surface)" stroke="var(--line)" stroke-width="1.5"/>
+  <text x="480.0" y="456" font-size="13.5" font-weight="600" text-anchor="middle">A student who runs a backtest and sees 300% has learned nothing except how to fool themselves.</text>
+  <text x="480.0" y="480" font-size="12" font-weight="400" text-anchor="middle" class="muted">Every bias in this workshop is something you measure, not something you read about.</text>
+</svg>
