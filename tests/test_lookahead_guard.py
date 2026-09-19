@@ -228,3 +228,50 @@ def test_honest_strategy_runs_clean(small_data):
     result = run_backtest(small_data, Honest(), BacktestConfig())
     assert len(result.equity) == len(small_data)
     assert np.isfinite(result.equity).all()
+
+
+# --------------------------------------------------------------------------
+# The streaming view used by live sessions must behave identically to the
+# batch one -- including its refusal to show the future.
+# --------------------------------------------------------------------------
+def test_streaming_view_matches_batch_view(small_data):
+    seed = small_data.iloc[:100]
+    batch = MarketView(small_data, Clock(-1))
+    streaming = MarketView._streaming(seed, capacity=16)
+
+    for i in range(100, len(small_data)):
+        streaming._append_bar(small_data.index[i], small_data.iloc[i])
+        batch._advance(i)
+
+        assert streaming.i == batch.i
+        assert streaming.now == batch.now
+        assert len(streaming) == len(batch)
+        assert streaming.close[-1] == batch.close[-1]
+        assert np.allclose(streaming.close.history(20), batch.close.history(20))
+
+
+def test_streaming_view_blocks_the_future(small_data):
+    streaming = MarketView._streaming(small_data.iloc[:50], capacity=8)
+    streaming._append_bar(small_data.index[50], small_data.iloc[50])
+
+    assert len(streaming) == 51
+    assert streaming.close[-1] == pytest.approx(small_data["close"].iloc[50])
+    with pytest.raises(LookAheadError):
+        streaming.close[51]
+
+
+def test_streaming_buffer_growth_preserves_history(small_data):
+    """Doubling the buffer must not lose or corrupt what is already in it."""
+    streaming = MarketView._streaming(small_data.iloc[:10], capacity=12)
+    for i in range(10, 200):
+        streaming._append_bar(small_data.index[i], small_data.iloc[i])
+
+    assert len(streaming) == 200
+    assert np.allclose(np.asarray(streaming.close), small_data["close"].to_numpy()[:200])
+    assert streaming.frame().index.equals(small_data.index[:200])
+
+
+def test_streaming_view_data_is_still_read_only(small_data):
+    streaming = MarketView._streaming(small_data.iloc[:50], capacity=64)
+    with pytest.raises(ValueError):
+        streaming.close._values[0] = -1.0

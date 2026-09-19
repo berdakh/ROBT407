@@ -89,10 +89,22 @@ class SeriesView:
 
     def __init__(self, values: np.ndarray, clock: Clock, name: str = "") -> None:
         arr = np.asarray(values, dtype=float)
-        arr.flags.writeable = False
+        if arr.flags.owndata:
+            arr.flags.writeable = False
+        else:
+            arr = arr.view()
+            arr.flags.writeable = False
         self._values = arr
         self._clock = clock
         self._name = name
+
+    def _rebind(self, values: np.ndarray) -> None:
+        """Point at a new backing array. Engine-internal; used when a live
+        session grows its buffer. The replacement is still read-only to
+        strategy code."""
+        arr = np.asarray(values, dtype=float).view()
+        arr.flags.writeable = False
+        self._values = arr
 
     # -- size -------------------------------------------------------------
     @property
@@ -282,12 +294,15 @@ class MarketView:
         """Timestamp of the current bar's close."""
         if self._clock.i < 0:
             raise InsufficientHistoryError("no bars have elapsed yet")
+        if hasattr(self, "_ts"):
+            return self._ts[self._clock.i]
         return self._index[self._clock.i]
 
     @property
     def index(self) -> pd.DatetimeIndex:
         """Timestamps observed so far (a copy)."""
-        return self._index[: self._clock.i + 1].copy()
+        idx = self._materialise_index() if hasattr(self, "_ts") else self._index
+        return idx[: self._clock.i + 1].copy()
 
     def __len__(self) -> int:
         """Number of bars observed so far."""
@@ -312,7 +327,8 @@ class MarketView:
         stop = self._clock.i + 1
         start = 0 if n is None else max(0, stop - n)
         data = {name: sv._values[start:stop].copy() for name, sv in self._columns.items()}
-        return pd.DataFrame(data, index=self._index[start:stop])
+        idx = self._materialise_index() if hasattr(self, "_ts") else self._index
+        return pd.DataFrame(data, index=idx[start:stop])
 
     # -- engine-facing ----------------------------------------------------
     def _advance(self, i: int) -> None:
@@ -320,6 +336,68 @@ class MarketView:
         if i < self._clock.i:
             raise ValueError("time does not run backwards")
         self._clock.i = i
+
+    @classmethod
+    def _streaming(cls, seed: pd.DataFrame, capacity: int) -> "MarketView":
+        """A view backed by growable buffers, for a live bar-by-bar session.
+
+        A live loop appends one bar at a time. Rebuilding the view from a
+        DataFrame on every bar is O(n) per bar and therefore O(n^2) overall,
+        which is fine for a demo and unusable for a real session. This keeps
+        pre-allocated buffers and appends into them, so a bar costs O(1).
+        """
+        view = cls.__new__(cls)
+        view._clock = Clock(len(seed) - 1)
+        view._n = len(seed)
+        view._capacity = max(capacity, len(seed) * 2, 16)
+        view._buffers = {}
+        view._columns = {}
+        for col in seed.columns:
+            key = str(col).lower()
+            buf = np.empty(view._capacity, dtype=float)
+            buf[: len(seed)] = seed[col].to_numpy(dtype=float)
+            view._buffers[key] = buf
+            # Hand SeriesView a *view* of the buffer, not the buffer itself:
+            # SeriesView freezes any array it owns, which would make the
+            # buffer unwritable and break appending.
+            view._columns[key] = SeriesView(buf.view(), view._clock, name=key)
+        missing = [c for c in cls._OHLCV if c not in view._columns]
+        if missing:
+            raise ValueError(f"frame is missing required columns: {missing}")
+        # Timestamps are kept as a plain list while streaming: appending to a
+        # DatetimeIndex copies it, which would reintroduce the O(n^2) we are
+        # removing. The DatetimeIndex is materialised only when asked for.
+        view._ts = list(seed.index)
+        view._index = seed.index
+        view._index_stale = False
+        return view
+
+    def _append_bar(self, timestamp, row) -> None:
+        """Append one newly-closed bar and advance the clock. O(1) amortised."""
+        if not hasattr(self, "_buffers"):
+            raise TypeError("this MarketView is not streaming; use MarketView._streaming")
+
+        if self._n >= self._capacity:
+            self._capacity *= 2
+            for key, buf in self._buffers.items():
+                grown = np.empty(self._capacity, dtype=float)
+                grown[: self._n] = buf[: self._n]
+                self._buffers[key] = grown
+                self._columns[key]._rebind(grown.view())
+
+        for key, buf in self._buffers.items():
+            buf[self._n] = float(row[key]) if key in row else np.nan
+
+        self._ts.append(timestamp)
+        self._index_stale = True
+        self._n += 1
+        self._clock.i = self._n - 1
+
+    def _materialise_index(self) -> pd.DatetimeIndex:
+        if getattr(self, "_index_stale", False):
+            self._index = pd.DatetimeIndex(self._ts, name="timestamp")
+            self._index_stale = False
+        return self._index
 
     def __repr__(self) -> str:  # pragma: no cover - debugging aid
         if self._clock.i < 0:

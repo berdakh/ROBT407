@@ -37,7 +37,7 @@ from .backtest import BacktestConfig
 from .execution import CostModel, Fill, RETAIL_CRYPTO
 from .portfolio import Account
 from .strategy import Strategy
-from .view import Clock, MarketView
+from .view import MarketView
 
 __all__ = ["PaperBroker", "PaperTradingSession", "SessionLog"]
 
@@ -127,9 +127,10 @@ class PaperTradingSession:
         self.strategy = strategy
         self.broker = PaperBroker(initial_cash, cost_model)
         self.max_leverage = max_leverage
-        self._frame = history.copy()
-        self._clock = Clock(len(history) - 1)
-        self._view = MarketView(self._frame, self._clock)
+        # A streaming view appends bars in O(1) instead of rebuilding the whole
+        # frame each time, which matters once a session runs for thousands of
+        # bars -- and matters much more in production than in a notebook.
+        self._view = MarketView._streaming(history, capacity=max(4 * len(history), 1024))
         self.logs: list[SessionLog] = []
         self.pending_qty: float | None = None
         self.log_dir = Path(log_dir) if log_dir else None
@@ -146,10 +147,8 @@ class PaperTradingSession:
         settle last bar's decision at this bar's open, mark to this close,
         then decide.
         """
-        # Append the new bar and rebuild the view over the extended frame.
-        self._frame.loc[timestamp] = bar
-        self._clock = Clock(len(self._frame) - 1)
-        self._view = MarketView(self._frame, self._clock)
+        # Append the new bar. The view's clock advances with it.
+        self._view._append_bar(timestamp, bar)
 
         note = ""
         action = "hold"
@@ -180,7 +179,7 @@ class PaperTradingSession:
 
         entry = SessionLog(
             timestamp=str(timestamp),
-            bar_index=len(self._frame) - 1,
+            bar_index=self._view.i,
             price=float(bar["close"]),
             target_weight=target,
             actual_weight=self.broker.account.weight,
