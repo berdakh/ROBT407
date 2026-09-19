@@ -26,14 +26,13 @@ common way a strategy that "worked in backtest" fails in production.
 from __future__ import annotations
 
 import json
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
-from .backtest import BacktestConfig
 from .execution import CostModel, Fill, RETAIL_CRYPTO
 from .portfolio import Account
 from .strategy import Strategy

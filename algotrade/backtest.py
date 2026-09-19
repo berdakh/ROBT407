@@ -36,7 +36,6 @@ import numpy as np
 import pandas as pd
 
 from .data import BARS_PER_YEAR, validate_ohlcv
-from .errors import RiskLimitError
 from .execution import CostModel, Fill, Order, OrderStatus, OrderType, RETAIL_CRYPTO
 from .portfolio import Account
 from .strategy import Strategy

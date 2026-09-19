@@ -24,7 +24,7 @@ from abc import ABC, abstractmethod
 
 import numpy as np
 
-from .execution import Order, OrderType
+from .execution import Order
 from .view import MarketView
 
 __all__ = [

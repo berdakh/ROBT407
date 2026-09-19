@@ -260,6 +260,26 @@ for dataset, description in truth_labels.items():
 # 2. **Run your validation on data with no edge.** If it cannot tell the
 #    difference, it is not validating anything.
 
+# %%
+fig, axes = plt.subplots(1, 2, figsize=(11, 3.6))
+colors = ["#1a7f37" if v > 0 else "#cf222e" for v in ic]
+axes[0].bar(folds["fold"], ic, color=colors, alpha=0.85)
+axes[0].axhline(0, color="#57606a", linewidth=1)
+axes[0].axhline(ic.mean(), color="#0969da", linestyle="--", linewidth=1.2,
+                label=f"mean {ic.mean():+.4f}")
+axes[0].set_xlabel("fold")
+axes[0].set_ylabel("information coefficient")
+axes[0].legend(fontsize=8)
+axes[0].set_title("Per-fold IC on momentum.csv (real edge)", loc="left", fontsize=9)
+
+axes[1].bar(folds["fold"], folds["accuracy"] - 0.5, color="#0969da", alpha=0.8)
+axes[1].axhline(0, color="#57606a", linewidth=1)
+axes[1].set_xlabel("fold")
+axes[1].set_ylabel("accuracy - 50%")
+axes[1].set_title("Per-fold accuracy edge", loc="left", fontsize=9)
+fig.tight_layout()
+plt.show()
+
 # %% [markdown]
 # ## 5. The stitched out-of-sample equity curve
 #
@@ -392,15 +412,17 @@ for name, scheme in schemes.items():
 # Your code here.
 
 # %% [markdown]
-# ### Exercise 9.3 — Walk-forward on noise
+# ### Exercise 9.3 — How many folds do you need?
 #
-# Run this entire notebook's walk-forward on `pure_noise.csv`.
+# Section 4 showed that 10 folds cleanly separated the real edge (t = +5.18)
+# from noise (t = −1.14). Would 3 have?
 #
-# Report: mean IC, fraction of folds positive, t-statistic, and the stitched
-# net Sharpe. **Compare each number with what you got on `momentum.csv`.**
+# Re-run the three-dataset comparison with `test_size` chosen to give 3, 5, 10
+# and 20 folds. For each, record whether the t-statistic would have led you to
+# the right conclusion on all three datasets.
 #
-# Which of these statistics best separates the real edge from the fake one? That
-# is the statistic you should lead with in your capstone.
+# Then answer: what is the minimum number of folds you would accept in your own
+# capstone, and why?
 
 # %%
 # Your code here.
